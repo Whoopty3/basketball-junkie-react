@@ -1,43 +1,35 @@
-// src/components/Navbar.js
-import React from 'react';
-import './Navbar.css';
+import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 
 function Navbar() {
+  // State to handle the toggling of the menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Function to toggle the menu
   const toggleMenu = () => {
-    const navLinks = document.getElementById('nav-links');
-    navLinks.style.display = navLinks.style.display === 'block' ? 'none' : 'block';
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <header>
+    <nav>
       <div className="logo">
-        <img src="/images/basketball.jpg" alt="Basketball Junkie Logo" />
+        <img src="/path-to-your-logo.png" alt="Basketball Junkie Logo" />
         <h1>Basketball Junkie</h1>
       </div>
-      <div className="iframe-container">
-        <iframe
-          width="560"
-          height="315"
-          src="https://www.youtube.com/embed/zTBrCP0kBeU?si=vQwPydSgcrVE8lHC"
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
+      {/* Hamburger icon to toggle the menu */}
+      <div className="hamburger" onClick={toggleMenu}>
+        &#9776;
       </div>
-      <nav>
-        <span className="hamburger" onClick={toggleMenu}>
-          &#9776;
-        </span>
-        <ul id="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/players">Player Profiles</a></li>
-          <li><a href="/teams">Teams</a></li>
-          <li><a href="/analysis">Analysis</a></li>
-          <li><a href="/contact">Contact Us</a></li>
-        </ul>
-      </nav>
-    </header>
+      {/* Menu links, shown or hidden based on isMenuOpen state */}
+      <ul id="nav-links" style={{ display: isMenuOpen ? 'block' : 'none' }}>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/players">Player Profiles</Link></li>
+        <li><Link to="/teams">Teams</Link></li>
+        <li><Link to="/analysis">Analysis</Link></li>
+        <li><Link to="/contact">Contact Us</Link></li>
+        <li><a href="https://whoopty3.github.io/" target="_blank" rel="noopener noreferrer">Main Page</a></li>
+      </ul>
+    </nav>
   );
 }
 
