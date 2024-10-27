@@ -9,7 +9,7 @@ function Contact() {
         <h2>Contact Us</h2>
         <img src="/images/Contact Us-small.jpg" alt="Contact Us" />
         <form action="https://api.web3forms.com/submit" method="POST">
-          <input type="hidden" name="access_key" value="your-access-key" />
+          <input type="hidden" name="access_key" value="10d455ab-caff-42c6-81d0-0af63b3109f5" />
           <h2>Name</h2>
           <input type="text" name="name" required />
           <h2>Email</h2>
