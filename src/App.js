@@ -1,29 +1,27 @@
-// src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Players from './pages/Players';
 import Teams from './pages/Teams';
 import Analysis from './pages/Analysis';
 import Contact from './pages/Contact';
-import './App.css';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 function App() {
   return (
     <Router>
-      <Navbar />
-      <div className="content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/players" element={<Players />} />
-          <Route path="/teams" element={<Teams />} />
-          <Route path="/analysis" element={<Analysis />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
+      <div className="App">
+        <Navbar />
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/players" component={Players} />
+          <Route path="/teams" component={Teams} />
+          <Route path="/analysis" component={Analysis} />
+          <Route path="/contact" component={Contact} />
+        </Switch>
+        <Footer />
       </div>
-      <Footer />
     </Router>
   );
 }
