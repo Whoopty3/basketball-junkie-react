@@ -27,7 +27,7 @@ function Navbar() {
         <li><Link to="/teams">Teams</Link></li>
         <li><Link to="/analysis">Analysis</Link></li>
         <li><Link to="/contact">Contact Us</Link></li>
-        <li><a href="https://whoopty3.github.io/" target="_blank" rel="noopener noreferrer">Main Page</a></li>
+        <li><a href="https://whoopty3.github.io/basketball-junkie-react" target="_blank" rel="noopener noreferrer">Main Page</a></li>
       </ul>
     </nav>
   );
