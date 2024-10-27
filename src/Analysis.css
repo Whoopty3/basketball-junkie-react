@@ -1,0 +1,16 @@
+/* Analysis.css */
+.analysis {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .analysis h2 {
+    font-size: 2.2em;
+    margin-bottom: 20px;
+  }
+  
+  .analysis p {
+    font-size: 1.2em;
+    color: #666;
+  }
+  

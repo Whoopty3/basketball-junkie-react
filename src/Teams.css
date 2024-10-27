@@ -1,0 +1,16 @@
+/* Teams.css */
+.teams {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .teams h2 {
+    font-size: 2.2em;
+    margin-bottom: 20px;
+  }
+  
+  .teams p {
+    font-size: 1.2em;
+    color: #666;
+  }
+  
