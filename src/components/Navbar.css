@@ -1,33 +1,57 @@
-/* Navbar.css */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-    padding: 10px 20px;
+/* src/components/Navbar.css */
+header {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo h1 {
+  margin-left: 15px;
+  font-size: 24px;
+}
+
+.logo img {
+  width: 50px;
+  height: 50px;
+}
+
+nav ul {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  margin-right: 15px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.hamburger {
+  display: none;
+}
+
+/* Mobile menu */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+    cursor: pointer;
   }
-  
-  .navbar h1 {
-    color: #fff;
+
+  #nav-links {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  .navbar ul {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
+
+  #nav-links li {
+    margin-bottom: 10px;
   }
-  
-  .navbar ul li {
-    margin: 0 15px;
-  }
-  
-  .navbar ul li a {
-    color: #fff;
-    font-size: 1.1em;
-  }
-  
-  .navbar ul li a:hover {
-    color: #0073e6;
-  }
-  
+}

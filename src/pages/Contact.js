@@ -7,6 +7,7 @@ function Contact() {
     <section id="contact" className="contact-section">
       <div className="section-content">
         <h2>Contact Us</h2>
+        <img src="/images/Contact Us-small.jpg" alt="Contact Us" />
         <form action="https://api.web3forms.com/submit" method="POST">
           <input type="hidden" name="access_key" value="your-access-key" />
           <h2>Name</h2>

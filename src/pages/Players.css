@@ -1,17 +1,25 @@
-/* Players.css */
-.players-page {
-    text-align: center;
-  }
-  
-  .players-page h2 {
-    font-size: 2.2em;
-    margin-bottom: 20px;
-  }
-  
-  .player-list {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
+/* src/pages/Players.css */
+.layered-section {
+  padding: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th, .table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #0073e6;
+  color: white;
+}
+
+.table tr:hover {
+  background-color: #f5f5f5;
+}
