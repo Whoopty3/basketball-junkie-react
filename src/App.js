@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Players from './pages/Players';
 import Teams from './pages/Teams';
@@ -12,16 +12,20 @@ function App() {
   return (
     <Router>
       <div className="App">
+        {/* Navbar at the top */}
         <Navbar />
+
+        {/* Routes for different pages */}
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/players" element={<Players />} />
-          <Route path="/teams" element={<Teams />} />
-          <Route path="/analysis" element={<Analysis />} />
-          <Route path="/contact" element={<Contact />} />
-          {/* Catch all other routes */}
-          <Route path="*" element={<Home />} />
+          <Route path="/" element={<Home />} />           {/* Home page */}
+          <Route path="/players" element={<Players />} /> {/* Players page */}
+          <Route path="/teams" element={<Teams />} />     {/* Teams page */}
+          <Route path="/analysis" element={<Analysis />} />{/* Analysis page */}
+          <Route path="/contact" element={<Contact />} /> {/* Contact page */}
+          <Route path="*" element={<Home />} />           {/* Redirect unknown routes to Home */}
         </Routes>
+
+        {/* Footer at the bottom */}
         <Footer />
       </div>
     </Router>
