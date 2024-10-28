@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/basketball-junkie-react/static/css/main.97b1c389.chunk.css",
-    "main.js": "/basketball-junkie-react/static/js/main.75f2cd9b.chunk.js",
-    "main.js.map": "/basketball-junkie-react/static/js/main.75f2cd9b.chunk.js.map",
-    "runtime-main.js": "/basketball-junkie-react/static/js/runtime-main.d3f01cb4.js",
-    "runtime-main.js.map": "/basketball-junkie-react/static/js/runtime-main.d3f01cb4.js.map",
+    "main.css": "/basketball-junkie-react/static/css/main.639d64dd.chunk.css",
+    "main.js": "/basketball-junkie-react/static/js/main.20cb167d.chunk.js",
+    "main.js.map": "/basketball-junkie-react/static/js/main.20cb167d.chunk.js.map",
+    "runtime-main.js": "/basketball-junkie-react/static/js/runtime-main.9d8b14c4.js",
+    "runtime-main.js.map": "/basketball-junkie-react/static/js/runtime-main.9d8b14c4.js.map",
     "static/js/2.64a1c9f6.chunk.js": "/basketball-junkie-react/static/js/2.64a1c9f6.chunk.js",
     "static/js/2.64a1c9f6.chunk.js.map": "/basketball-junkie-react/static/js/2.64a1c9f6.chunk.js.map",
-    "static/js/3.23321201.chunk.js": "/basketball-junkie-react/static/js/3.23321201.chunk.js",
-    "static/js/3.23321201.chunk.js.map": "/basketball-junkie-react/static/js/3.23321201.chunk.js.map",
+    "static/js/3.d3741b82.chunk.js": "/basketball-junkie-react/static/js/3.d3741b82.chunk.js",
+    "static/js/3.d3741b82.chunk.js.map": "/basketball-junkie-react/static/js/3.d3741b82.chunk.js.map",
     "index.html": "/basketball-junkie-react/index.html",
-    "precache-manifest.2a5227f64af7bdb1aedca9d98584eaeb.js": "/basketball-junkie-react/precache-manifest.2a5227f64af7bdb1aedca9d98584eaeb.js",
+    "precache-manifest.61cbab7f241e0bcf67734ecaa740bf6b.js": "/basketball-junkie-react/precache-manifest.61cbab7f241e0bcf67734ecaa740bf6b.js",
     "service-worker.js": "/basketball-junkie-react/service-worker.js",
-    "static/css/main.97b1c389.chunk.css.map": "/basketball-junkie-react/static/css/main.97b1c389.chunk.css.map",
+    "static/css/main.639d64dd.chunk.css.map": "/basketball-junkie-react/static/css/main.639d64dd.chunk.css.map",
     "static/js/2.64a1c9f6.chunk.js.LICENSE.txt": "/basketball-junkie-react/static/js/2.64a1c9f6.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.d3f01cb4.js",
+    "static/js/runtime-main.9d8b14c4.js",
     "static/js/2.64a1c9f6.chunk.js",
-    "static/css/main.97b1c389.chunk.css",
-    "static/js/main.75f2cd9b.chunk.js"
+    "static/css/main.639d64dd.chunk.css",
+    "static/js/main.20cb167d.chunk.js"
   ]
 }
