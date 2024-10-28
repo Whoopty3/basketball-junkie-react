@@ -1,24 +1,24 @@
 {
   "files": {
     "main.css": "/basketball-junkie-react/static/css/main.d8ef7cd5.chunk.css",
-    "main.js": "/basketball-junkie-react/static/js/main.3b8ec3b1.chunk.js",
-    "main.js.map": "/basketball-junkie-react/static/js/main.3b8ec3b1.chunk.js.map",
+    "main.js": "/basketball-junkie-react/static/js/main.a6403073.chunk.js",
+    "main.js.map": "/basketball-junkie-react/static/js/main.a6403073.chunk.js.map",
     "runtime-main.js": "/basketball-junkie-react/static/js/runtime-main.9d8b14c4.js",
     "runtime-main.js.map": "/basketball-junkie-react/static/js/runtime-main.9d8b14c4.js.map",
-    "static/js/2.4aa7fbe0.chunk.js": "/basketball-junkie-react/static/js/2.4aa7fbe0.chunk.js",
-    "static/js/2.4aa7fbe0.chunk.js.map": "/basketball-junkie-react/static/js/2.4aa7fbe0.chunk.js.map",
+    "static/js/2.64a1c9f6.chunk.js": "/basketball-junkie-react/static/js/2.64a1c9f6.chunk.js",
+    "static/js/2.64a1c9f6.chunk.js.map": "/basketball-junkie-react/static/js/2.64a1c9f6.chunk.js.map",
     "static/js/3.d3741b82.chunk.js": "/basketball-junkie-react/static/js/3.d3741b82.chunk.js",
     "static/js/3.d3741b82.chunk.js.map": "/basketball-junkie-react/static/js/3.d3741b82.chunk.js.map",
     "index.html": "/basketball-junkie-react/index.html",
-    "precache-manifest.551fd5c70b3da2b73f9fe1d9b89a9413.js": "/basketball-junkie-react/precache-manifest.551fd5c70b3da2b73f9fe1d9b89a9413.js",
+    "precache-manifest.895f966549cbda4e2bdfd8977cf4ade3.js": "/basketball-junkie-react/precache-manifest.895f966549cbda4e2bdfd8977cf4ade3.js",
     "service-worker.js": "/basketball-junkie-react/service-worker.js",
     "static/css/main.d8ef7cd5.chunk.css.map": "/basketball-junkie-react/static/css/main.d8ef7cd5.chunk.css.map",
-    "static/js/2.4aa7fbe0.chunk.js.LICENSE.txt": "/basketball-junkie-react/static/js/2.4aa7fbe0.chunk.js.LICENSE.txt"
+    "static/js/2.64a1c9f6.chunk.js.LICENSE.txt": "/basketball-junkie-react/static/js/2.64a1c9f6.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.9d8b14c4.js",
-    "static/js/2.4aa7fbe0.chunk.js",
+    "static/js/2.64a1c9f6.chunk.js",
     "static/css/main.d8ef7cd5.chunk.css",
-    "static/js/main.3b8ec3b1.chunk.js"
+    "static/js/main.a6403073.chunk.js"
   ]
 }
