@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "54bbf769210039f0962cf56a03657226",
+    "revision": "49ef6e7552de887c2944271f3f60402b",
     "url": "/basketball-junkie-react/index.html"
   },
   {
-    "revision": "fab48f3d3242d3b16c6f",
+    "revision": "4faf3a2cc403b5887769",
     "url": "/basketball-junkie-react/static/css/main.d8ef7cd5.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/basketball-junkie-react/static/js/3.d3741b82.chunk.js"
   },
   {
-    "revision": "fab48f3d3242d3b16c6f",
-    "url": "/basketball-junkie-react/static/js/main.2de4f5fb.chunk.js"
+    "revision": "4faf3a2cc403b5887769",
+    "url": "/basketball-junkie-react/static/js/main.7ecdf894.chunk.js"
   },
   {
     "revision": "35dda61bc4f8f92720e9",
