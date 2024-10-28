@@ -16,7 +16,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/players" element={<Players />} />
+          <Route path="https://whoopty3.github.io/basketball-junkie-react/players" element={<Players />} />
           <Route path="/teams" element={<Teams />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/contact" element={<Contact />} />
