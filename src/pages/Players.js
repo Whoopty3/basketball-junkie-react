@@ -53,4 +53,4 @@ function Players() {
   );
 }
 
-export default Players;
+export default Players.js;
