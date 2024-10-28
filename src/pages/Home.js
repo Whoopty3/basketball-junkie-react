@@ -1,4 +1,3 @@
-// src/pages/Home.js
 import React from 'react';
 import './Home.css';
 
@@ -6,7 +5,7 @@ function Home() {
   return (
     <section id="home" className="layered-section">
       <div className="section-image">
-        <img src="/images/basketball.jpg" alt="Home" />
+        <img src="./images/basketball.jpg" alt="Home" />
       </div>
       <div className="section-content">
         <h2>Welcome to Basketball Junkie</h2>

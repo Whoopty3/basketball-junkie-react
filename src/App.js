@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -11,7 +11,7 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
+    <Router basename={process.env.NODE_ENV === 'development' ? '' : '/basketball-junkie-react'}>
       <div className="App">
         <Navbar />
         <Routes>
@@ -20,8 +20,6 @@ function App() {
           <Route path="/teams" element={<Teams />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/contact" element={<Contact />} />
-          {/* Catch-all route */}
-          <Route path="*" element={<Home />} />
         </Routes>
         <Footer />
       </div>
