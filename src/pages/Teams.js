@@ -51,4 +51,4 @@ function Teams() {
   );
 }
 
-export default Teams.js;
+export default Teams;

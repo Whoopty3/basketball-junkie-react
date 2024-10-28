@@ -28,4 +28,4 @@ function Contact() {
   );
 }
 
-export default Contact.js;
+export default Contact;

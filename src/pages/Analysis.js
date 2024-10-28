@@ -57,4 +57,4 @@ function Analysis() {
   );
 }
 
-export default Analysis.js;
+export default Analysis;
