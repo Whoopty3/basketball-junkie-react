@@ -1,6 +1,6 @@
 // src/pages/Teams.js
 import React from 'react';
-import './Teams.css';
+import '../styles/Teams.css';
 
 function Teams() {
   return (

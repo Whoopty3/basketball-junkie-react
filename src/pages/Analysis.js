@@ -1,6 +1,7 @@
 // src/pages/Analysis.js
 import React from 'react';
-import './Analysis.css';
+import '../styles/Analysis.css';  // Adjust path based on where the CSS file is located
+
 
 function Analysis() {
   return (

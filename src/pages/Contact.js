@@ -1,28 +1,34 @@
 // src/pages/Contact.js
 import React from 'react';
-import './Contact.css';
+import '../styles/Contact.css';  // Correct import for Contact CSS
 
 function Contact() {
   return (
-    <section id="contact" className="contact-section">
-      <div className="section-content">
-        <h2>Contact Us</h2>
-        <img src="/images/Contact Us-small.jpg" alt="Contact Us" />
-        <form action="https://api.web3forms.com/submit" method="POST">
-          <input type="hidden" name="access_key" value="10d455ab-caff-42c6-81d0-0af63b3109f5" />
-          <h2>Name</h2>
-          <input type="text" name="name" required />
-          <h2>Email</h2>
-          <input type="email" name="email" required />
-          <h2>Message</h2>
-          <textarea name="message" required></textarea>
-          <button type="submit">Submit Form</button>
-        </form>
-        <h3>Other Contact Options</h3>
-        <ul>
-          <li><strong>Email:</strong> Payne.Whitlock3@gmail.com</li>
-          <li><strong>Phone:</strong> +1 803-634-2637</li>
-        </ul>
+    <section className="contact">
+      <h2>Contact Us</h2>
+      <form action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="10d455ab-caff-42c6-81d0-0af63b3109f5"/>
+        
+        <div className="form-group">
+          <label htmlFor="name">Name:</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="email">Email:</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="message">Message:</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+
+        <button type="submit">Submit</button>
+      </form>
+
+      <div className="status-message">
+        {/* Success or error messages can be added dynamically here via JavaScript */}
       </div>
     </section>
   );

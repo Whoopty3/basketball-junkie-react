@@ -1,6 +1,7 @@
 // src/pages/Players.js
 import React from 'react';
-import './Players.css';
+import '../styles/Players.css';  // Adjust based on your folder structure
+
 
 function Players() {
   return (
