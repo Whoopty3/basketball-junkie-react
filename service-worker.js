@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/basketball-junkie-react/precache-manifest.fda279b6be3f45f183226f5971a2bd7d.js"
+  "/basketball-junkie-react/precache-manifest.b031fd8eeeb5848e030d936abeb62293.js"
 );
 
 self.addEventListener('message', (event) => {
