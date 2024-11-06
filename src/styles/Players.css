@@ -1,31 +1,50 @@
-/* Player Profiles styling */
-#player-profiles-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+/* Players.css */
+.player-profiles-section {
+  padding: 20px;
+  text-align: center;
 }
 
-#player-profiles-section section {
-  padding: 15px;
-  background-color: #fff;
-  border: 1px solid #ddd;
+.player-profiles-content h2 {
+  font-size: 2em;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.player-image img {
+  max-width: 100%;
+  height: auto;
+  margin: 20px 0;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-#player-profiles-section section h3 {
-  font-size: 24px;
-  color: #0073e6;
-  margin-bottom: 10px;
-  border-bottom: 2px solid #0073e6;
-  padding-bottom: 5px;
+.player-profiles-content p {
+  font-size: 1.1em;
+  color: #555;
 }
 
-#player-profiles-section section p {
-  margin: 5px 0;
-  font-size: 16px;
+.player-stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: #444;
 }
 
-#player-profiles-section section p:first-of-type {
+.player-stats-table th,
+.player-stats-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.player-stats-table th {
+  background-color: #f4f4f4;
   font-weight: bold;
+}
+
+.player-stats-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.player-stats-table tr:hover {
+  background-color: #f1f1f1;
 }

@@ -1,10 +1,11 @@
+// src/components/Footer.js
 import React from 'react';
-import '../styles/Footer.css'; // Ensure this is the correct relative path
+import '../styles/Footer.css';
 
 function Footer() {
   return (
     <footer className="footer">
-      <p>&copy; 2024 Basketball Junkie. All Rights Reserved.</p>
+      <p>&copy; 2024 Basketball Junkie</p>
     </footer>
   );
 }

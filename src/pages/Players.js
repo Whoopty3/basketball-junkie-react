@@ -1,16 +1,16 @@
-// src/pages/Players.js
 import React from 'react';
-import '../styles/Players.css';  // Adjust based on your folder structure
-
-
+import '../styles/Players.css';
 function Players() {
   return (
-    <section id="player-profiles" className="layered-section">
-      <div className="section-content">
+    <section className="player-profiles-section">
+      <div className="player-profiles-content">
         <h2>Player Profiles</h2>
-        <img src="/images/Player-profiles-small.jpg" alt="Player Profiles" />
+        <div className="player-image">
+          <img src="/images/Player-profiles-small.jpg" alt="Player Profiles" />
+        </div>
         <p>Here are the stats for 25 top NBA players:</p>
-        <table>
+        
+        <table className="player-stats-table">
           <thead>
             <tr>
               <th>Player</th>

@@ -1,10 +1,23 @@
-/* You can add footer-specific styling here, for example: */
-footer {
-  background-color: #333;
-  color: white;
-  padding: 10px;
+/* src/components/Footer.css */
+
+.footer {
+  background-color: #222;
+  color: #fff;
   text-align: center;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
+  padding: 1rem;
+  margin-top: 3rem;
+}
+
+.footer p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.footer a {
+  color: #ddd;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: #fff;
 }
