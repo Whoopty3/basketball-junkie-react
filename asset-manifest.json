@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/basketball-junkie-react/static/css/main.3302c21d.chunk.css",
-    "main.js": "/basketball-junkie-react/static/js/main.ad981b77.chunk.js",
-    "main.js.map": "/basketball-junkie-react/static/js/main.ad981b77.chunk.js.map",
+    "main.css": "/basketball-junkie-react/static/css/main.74a7585a.chunk.css",
+    "main.js": "/basketball-junkie-react/static/js/main.40fcde78.chunk.js",
+    "main.js.map": "/basketball-junkie-react/static/js/main.40fcde78.chunk.js.map",
     "runtime-main.js": "/basketball-junkie-react/static/js/runtime-main.c85be0e9.js",
     "runtime-main.js.map": "/basketball-junkie-react/static/js/runtime-main.c85be0e9.js.map",
     "static/js/2.5c38e8ce.chunk.js": "/basketball-junkie-react/static/js/2.5c38e8ce.chunk.js",
     "static/js/2.5c38e8ce.chunk.js.map": "/basketball-junkie-react/static/js/2.5c38e8ce.chunk.js.map",
     "index.html": "/basketball-junkie-react/index.html",
-    "precache-manifest.502d60e9249ad3cd4ac5cd8b4e82e01f.js": "/basketball-junkie-react/precache-manifest.502d60e9249ad3cd4ac5cd8b4e82e01f.js",
+    "precache-manifest.6240bffd333828f3b7ff749014f83530.js": "/basketball-junkie-react/precache-manifest.6240bffd333828f3b7ff749014f83530.js",
     "service-worker.js": "/basketball-junkie-react/service-worker.js",
-    "static/css/main.3302c21d.chunk.css.map": "/basketball-junkie-react/static/css/main.3302c21d.chunk.css.map",
+    "static/css/main.74a7585a.chunk.css.map": "/basketball-junkie-react/static/css/main.74a7585a.chunk.css.map",
     "static/js/2.5c38e8ce.chunk.js.LICENSE.txt": "/basketball-junkie-react/static/js/2.5c38e8ce.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.c85be0e9.js",
     "static/js/2.5c38e8ce.chunk.js",
-    "static/css/main.3302c21d.chunk.css",
-    "static/js/main.ad981b77.chunk.js"
+    "static/css/main.74a7585a.chunk.css",
+    "static/js/main.40fcde78.chunk.js"
   ]
 }
