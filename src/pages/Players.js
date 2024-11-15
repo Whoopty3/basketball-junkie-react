@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const Players = () => {
   const [players, setPlayers] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Fetch data from the backend using the environment variable
@@ -15,6 +16,7 @@ const Players = () => {
         setPlayers(data); // Store players data in the state
       } catch (error) {
         console.error('Error:', error);
+        setError('Error fetching players');
       }
     };
 
@@ -24,13 +26,18 @@ const Players = () => {
   return (
     <div>
       <h1>Players</h1>
-      <ul>
-        {players.map(player => (
-          <li key={player.id}>
-            {player.name} - {player.team} - {player.points} PPG
-          </li>
-        ))}
-      </ul>
+      {error && <p>{error}</p>}  {/* Display error message if fetch fails */}
+      {players.length === 0 ? (
+        <p>No players found.</p> // Display message if no players
+      ) : (
+        <ul>
+          {players.map(player => (
+            <li key={player.id}>
+              {player.name} - {player.team} - {player.points} PPG
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
