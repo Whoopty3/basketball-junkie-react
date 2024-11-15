@@ -33,7 +33,11 @@ const Players = () => {
         <ul>
           {players.map(player => (
             <li key={player.id}>
-              {player.name} - {player.team} - {player.points} PPG
+              <strong>{player.name}</strong> - {player.team} - {player.points} PPG
+              <br />
+              Assists: {player.assists} | Rebounds: {player.rebounds} 
+              <br />
+              FG%: {player.fieldGoalPercentage}% | 3P%: {player.threePointPercentage}%
             </li>
           ))}
         </ul>
