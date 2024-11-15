@@ -15,7 +15,7 @@ const Players = () => {
         const data = await response.json();
         setPlayers(data); // Store players data in the state
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error);git
         setError('Error fetching players');
       }
     };
