@@ -1,69 +1,57 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from 'react';
 
-const Players = () => {
+const PlayerList = () => {
   const [players, setPlayers] = useState([]);
-  const [selectedPlayer, setSelectedPlayer] = useState(null); // State to hold the selected player's data
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch data from the backend
-    const fetchPlayers = async () => {
-      try {
-        const response = await fetch('https://basketball-junkie-backend.onrender.com/players'); // Update the URL to fetch from the correct endpoint
+    // Fetch player data from the backend
+    fetch('https://basketball-junkie-backend.onrender.com/players')
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to fetch players');
+          throw new Error('Failed to fetch player data');
         }
-        const data = await response.json();
-        setPlayers(data); // Store players data in the state
-      } catch (error) {
-        console.error('Error:', error);
-        setError('Error fetching players');
-      }
-    };
+        return response.json();
+      })
+      .then((data) => {
+        setPlayers(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
 
-    fetchPlayers();
-  }, []); // Empty dependency array to run once when the component mounts
-
-  const handlePlayerClick = (player) => {
-    setSelectedPlayer(player); // Set the clicked player’s data
-  };
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div>
-      <h1>Players</h1>
-      {error && <p>{error}</p>} {/* Display error message if fetch fails */}
-      {players.length === 0 ? (
-        <p>No players found.</p> // Display message if no players
-      ) : (
-        <div>
-          <h2>Click on a player to view their stats:</h2>
-          <ul>
-            {players.map(player => (
-              <li key={player.id}>
-                <button onClick={() => handlePlayerClick(player)}>
-                  {player.name}
-                </button>
-              </li>
-            ))}
-          </ul>
-
-          {/* Display selected player's details */}
-          {selectedPlayer && (
-            <div>
-              <h3>Player Details</h3>
-              <p><strong>Name:</strong> {selectedPlayer.name}</p>
-              <p><strong>Team:</strong> {selectedPlayer.team}</p>
-              <p><strong>Points per Game:</strong> {selectedPlayer.points}</p>
-              <p><strong>Assists per Game:</strong> {selectedPlayer.assists}</p>
-              <p><strong>Rebounds per Game:</strong> {selectedPlayer.rebounds}</p>
-              <p><strong>Field Goal Percentage:</strong> {selectedPlayer.fieldGoalPercentage}%</p>
-              <p><strong>3-Point Percentage:</strong> {selectedPlayer.threePointPercentage}%</p>
-            </div>
-          )}
-        </div>
-      )}
+      <h1>Player List</h1>
+      <div className="player-container">
+        {players.map((player, index) => (
+          <div key={index} className="player-card">
+            <h2>{player.name}</h2>
+            <p>Team: {player.team}</p>
+            <p>Points per game: {player.points}</p>
+            <p>Assists per game: {player.assists}</p>
+            <p>Rebounds per game: {player.rebounds}</p>
+            <p>Field Goal %: {player.fieldGoalPercentage}</p>
+            <p>3-Point %: {player.threePointPercentage}</p>
+            {player.image && (
+              <img
+                src={`https://basketball-junkie-backend.onrender.com/images/${player.image}`}
+                alt={player.name}
+                className="player-image"
+              />
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default Players;
+export default PlayerList;
