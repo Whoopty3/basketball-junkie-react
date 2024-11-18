@@ -7,7 +7,7 @@ const PlayerList = () => {
 
   useEffect(() => {
     // Fetch player data from the backend
-    fetch('https://basketball-junkie-backend.onrender.com/api/players')
+    fetch('https://basketball-junkie-backend.onrender.com')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch player data');
