@@ -22,7 +22,7 @@ const PlayerList = () => {
       .catch((err) => {
         setError(err.message);
         setLoading(false);
-      });
+      })
   }, []);
 
   if (loading) return <p>Loading...</p>;
