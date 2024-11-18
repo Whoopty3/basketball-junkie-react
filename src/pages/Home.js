@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/Home.css';
 
 function Home() {
+  // State to hold the list of players
+  const [players, setPlayers] = useState([]);
+
   return (
     <div className="home">
       <header className="home-header">

@@ -7,6 +7,16 @@ import Players from './pages/Players';
 import Teams from './pages/Teams';
 import Analysis from './pages/Analysis';
 import Contact from './pages/Contact';
+ // Import the AddPlayerForm
+
+
+
+  // Make sure the casing matches the actual file
+
+
+
+
+ 
 
 function App() {
   return (
@@ -24,5 +34,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
