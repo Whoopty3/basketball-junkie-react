@@ -1,71 +1,119 @@
-import React, { useState, useEffect } from "react";
-import AddPlayerForm from "./AddPlayerForm"; // Ensure AddPlayerForm is imported correctly
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-const Players = () => {
-  const [players, setPlayers] = useState([]); // State for the list of players
-  const [loading, setLoading] = useState(true); // State for loading status
-  const [error, setError] = useState(null); // State for errors
+const AddPlayerForm = ({ setPlayers, players }) => {
+  const [newPlayer, setNewPlayer] = useState({
+    name: '',
+    team: '',
+    points: '',
+    assists: '',
+    rebounds: '',
+    fieldGoalPercentage: '',
+    threePointPercentage: '',
+  });
 
-  // Fetch players data when the component mounts
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      try {
-        const response = await axios.get("https://basketball-junkie-backend.onrender.com/api/players");
-        setPlayers(response.data); // Set the players data
-      } catch (err) {
-        setError("Error fetching player data");
-        console.error("Error fetching player data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewPlayer((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
 
-    fetchPlayers();
-  }, []); // Empty dependency array to run once on mount
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (loading) {
-    return <p>Loading players...</p>; // Loading state
-  }
+    try {
+      const response = await axios.post("https://basketball-junkie-backend.onrender.com/api/players", newPlayer);
 
-  if (error) {
-    return <p>{error}</p>; // Error state
-  }
+      // After the player is added, update the players state with the new list
+      setPlayers([...players, response.data]); // Assuming the backend returns the added player
+
+      // Reset form fields
+      setNewPlayer({
+        name: '',
+        team: '',
+        points: '',
+        assists: '',
+        rebounds: '',
+        fieldGoalPercentage: '',
+        threePointPercentage: '',
+        image: ''
+      });
+    } catch (err) {
+      console.error("Error adding player:", err);
+    }
+  };
 
   return (
-    <div className="players-container">
-      <h1>Players</h1>
-
-      {/* Add Player Form */}
-      {/* Pass the current players list and setPlayers function to the form */}
-      <AddPlayerForm setPlayers={setPlayers} players={players} />
-
-      <div className="players-list">
-        {players.length > 0 ? (
-          players.map((player) => (
-            <div key={player.name} className="player-card">
-              {player.image && (
-                <img
-                  src={`https://basketball-junkie-backend.onrender.com/images/${player.image}`}
-                  alt={player.name}
-                  className="player-image"
-                />
-              )}
-              <h2>{player.name}</h2>
-              <p>Team: {player.team}</p>
-              <p>Points: {player.points}</p>
-              <p>Assists: {player.assists}</p>
-              <p>Rebounds: {player.rebounds}</p>
-              <p>Field Goal Percentage: {player.fieldGoalPercentage}%</p>
-              <p>3-Point Percentage: {player.threePointPercentage}%</p>
-            </div>
-          ))
-        ) : (
-          <p>No players available</p>
-        )}
-      </div>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <h2>Add New Player</h2>
+      <label>Name:</label>
+      <input
+        type="text"
+        name="name"
+        value={newPlayer.name}
+        onChange={handleInputChange}
+        required
+      />
+      <label>Team:</label>
+      <input
+        type="text"
+        name="team"
+        value={newPlayer.team}
+        onChange={handleInputChange}
+        required
+      />
+      <label>Points:</label>
+      <input
+        type="number"
+        name="points"
+        value={newPlayer.points}
+        onChange={handleInputChange}
+        required
+      />
+      <label>Assists:</label>
+      <input
+        type="number"
+        name="assists"
+        value={newPlayer.assists}
+        onChange={handleInputChange}
+        required
+      />
+      <label>Rebounds:</label>
+      <input
+        type="number"
+        name="rebounds"
+        value={newPlayer.rebounds}
+        onChange={handleInputChange}
+        required
+      />
+      <label>Field Goal Percentage:</label>
+      <input
+        type="number"
+        name="fieldGoalPercentage"
+        value={newPlayer.fieldGoalPercentage}
+        onChange={handleInputChange}
+        required
+      />
+      <label>3-Point Percentage:</label>
+      <input
+        type="number"
+        name="threePointPercentage"
+        value={newPlayer.threePointPercentage}
+        onChange={handleInputChange}
+        required
+      />
+      <label>Image URL:</label>
+      <input
+        type="text"
+        name="image"
+        value={newPlayer.image}
+        onChange={handleInputChange}
+      />
+      <button type="submit">Add Player</button>
+    </form>
   );
 };
 
-export default Players;
+export default AddPlayerForm;

@@ -10,7 +10,6 @@ const AddPlayerForm = ({ setPlayers, players }) => {
     rebounds: '',
     fieldGoalPercentage: '',
     threePointPercentage: '',
-    image: ''
   });
 
   const handleInputChange = (e) => {
@@ -39,7 +38,6 @@ const AddPlayerForm = ({ setPlayers, players }) => {
         rebounds: '',
         fieldGoalPercentage: '',
         threePointPercentage: '',
-        image: ''
       });
     } catch (err) {
       console.error("Error adding player:", err);
