@@ -1,4 +1,3 @@
-// src/App.js
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './pages/Navbar'; // Import the Navbar
@@ -7,16 +6,6 @@ import Players from './pages/Players';
 import Teams from './pages/Teams';
 import Analysis from './pages/Analysis';
 import Contact from './pages/Contact';
- // Import the AddPlayerForm
-
-
-
-  // Make sure the casing matches the actual file
-
-
-
-
- 
 
 function App() {
   return (
@@ -25,7 +14,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="players" element={<Players />} />
+          <Route path="players" element={<Players />} /> {/* Updated route for Players */}
           <Route path="teams" element={<Teams />} />
           <Route path="analysis" element={<Analysis />} />
           <Route path="contact" element={<Contact />} />
@@ -34,4 +23,5 @@ function App() {
     </div>
   );
 }
+
 export default App;

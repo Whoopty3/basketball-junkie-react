@@ -13,6 +13,7 @@ const Players = () => {
     threePointPercentage: "",
     image: null,
   });
+  const [error, setError] = useState(null);
 
   // Fetch players from the backend
   useEffect(() => {
@@ -24,6 +25,7 @@ const Players = () => {
         setPlayers(response.data);
       } catch (error) {
         console.error("Error fetching players:", error);
+        setError("Error fetching players data.");
       }
     };
 
@@ -50,6 +52,11 @@ const Players = () => {
   // Submit the new player
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Input validation
+    if (!newPlayer.name || !newPlayer.team || !newPlayer.points || !newPlayer.assists || !newPlayer.rebounds || !newPlayer.fieldGoalPercentage || !newPlayer.threePointPercentage) {
+      setError("All fields are required.");
+      return;
+    }
 
     const formData = new FormData();
     Object.keys(newPlayer).forEach((key) => {
@@ -77,14 +84,18 @@ const Players = () => {
         threePointPercentage: "",
         image: null,
       });
+      setError(null); // Clear any previous errors
     } catch (error) {
       console.error("Error adding player:", error);
+      setError("There was an error adding the player.");
     }
   };
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <h1 style={{ textAlign: "center" }}>Players</h1>
+      {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr style={{ backgroundColor: "#f4f4f4", textAlign: "left" }}>
@@ -256,7 +267,6 @@ const Players = () => {
             borderRadius: "4px",
             cursor: "pointer",
             fontSize: "16px",
-            marginTop: "10px",
           }}
         >
           Add Player
