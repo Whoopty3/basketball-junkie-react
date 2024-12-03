@@ -11,7 +11,7 @@ const PlayerForm = ({ setPlayers, player, setMessage }) => {
   const [threePointPercentage, setThreePointPercentage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Pre-fill the form if editing an existing player
+  
   useEffect(() => {
     if (player) {
       setName(player.name);
@@ -50,7 +50,7 @@ const PlayerForm = ({ setPlayers, player, setMessage }) => {
     try {
       let response;
       if (player) {
-        // If editing an existing player (PUT request)
+        // (PUT request)
         response = await fetch(`https://basketball-junkie-backend.onrender.com/api/players/${player._id}`, {
           method: 'PUT',
           headers: {
@@ -73,7 +73,7 @@ const PlayerForm = ({ setPlayers, player, setMessage }) => {
           setErrorMessage('Failed to update player');
         }
       } else {
-        // If adding a new player (POST request)
+        // (POST request)
         response = await fetch('https://basketball-junkie-backend.onrender.com/api/players', {
           method: 'POST',
           headers: {
