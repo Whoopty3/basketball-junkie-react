@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Add Player - Basketball Junkie</title>
+  <link rel="stylesheet" href="styles.css"> <!-- Optional: For styling -->
+</head>
+<body>
+  <h1>Add a Player</h1>
+
+  <!-- Form to input player data and upload an image -->
+  <form id="player-form" enctype="multipart/form-data">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required /><br>
+
+    <label for="team">Team:</label>
+    <input type="text" id="team" name="team" required /><br>
+
+    <label for="points">Points:</label>
+    <input type="number" id="points" name="points" required /><br>
+
+    <label for="assists">Assists:</label>
+    <input type="number" id="assists" name="assists" required /><br>
+
+    <label for="rebounds">Rebounds:</label>
+    <input type="number" id="rebounds" name="rebounds" required /><br>
+
+    <label for="fieldGoalPercentage">Field Goal Percentage:</label>
+    <input type="number" id="fieldGoalPercentage" name="fieldGoalPercentage" required /><br>
+
+    <label for="threePointPercentage">Three Point Percentage:</label>
+    <input type="number" id="threePointPercentage" name="threePointPercentage" required /><br>
+
+    <label for="img">Image:</label>
+    <input type="file" id="img" name="img" accept="image/*" /><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="response-message" style="display: none;"></div> <!-- Display success/error message -->
+
+  <script>
+    // Handle form submission
+    document.getElementById('player-form').addEventListener('submit', async function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      const formData = new FormData(this); // Create FormData object with form data
+
+      try {
+        // Send data to server via POST request
+        const response = await fetch('/api/players', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+        
+        // Show success or error message
+        const messageDiv = document.getElementById('response-message');
+        if (response.ok) {
+          messageDiv.style.display = 'block';
+          messageDiv.innerText = 'Player added successfully!';
+          messageDiv.style.color = 'green';
+        } else {
+          messageDiv.style.display = 'block';
+          messageDiv.innerText = `Error: ${result.error}`;
+          messageDiv.style.color = 'red';
+        }
+      } catch (error) {
+        console.error('Error submitting the form:', error);
+      }
+    });
+  </script>
+</body>
+</html>
