@@ -1,42 +1,116 @@
-/* src/index.css */
+/* General Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #FFF; /* White background for a minimalist look */
+  color: #333; /* Dark text for contrast */
+}
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-  }
-  
-  .container {
-    padding: 2rem;
-  }
-  
-  h1, h2, h3 {
-    color: #222;
-  }
-  
-  a {
-    color: #333;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    color: #555;
-  }
-  
-  main {
-    padding-top: 5rem; /* Adjust for navbar */
-  }
-  
-  @media (max-width: 768px) {
-    .navbar ul {
-      flex-direction: column;
-      gap: 1rem;
-    }
-  }
-  
+/* Navbar styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #FFF; /* White background for navbar */
+  color: #6A4C9C; /* Soft purple text */
+  padding: 15px 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for subtle depth */
+  z-index: 1000; /* Ensure navbar stays on top */
+}
+
+.navbar a {
+  color: #6A4C9C; /* Soft purple links */
+  text-decoration: none;
+  margin-right: 15px;
+  font-weight: 600;
+}
+
+.navbar a:hover {
+  color: #9B7DFF; /* Lighter purple on hover */
+}
+
+/* Main content wrapper */
+.main-content {
+  padding-top: 120px; /* Increased space for the fixed navbar */
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 40px;
+}
+
+/* Header */
+h1, h2, h3, h4, h5, h6 {
+  color: #6A4C9C; /* Soft purple headers */
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 3rem; /* Adjusted font size for the Basketball Junkie heading */
+  margin-bottom: 20px;
+}
+
+/* Button Styles */
+button {
+  background-color: #6A4C9C; /* Soft purple background */
+  color: #FFF;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #9B7DFF; /* Lighter purple on hover */
+}
+
+/* Links */
+a {
+  color: #6A4C9C; /* Soft purple links */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #9B7DFF; /* Lighter purple on hover */
+}
+
+/* Cards or sections */
+.card, .section {
+  background-color: #FFF; /* White background for sections */
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for cards */
+}
+
+.card h2, .section h2 {
+  color: #6A4C9C; /* Soft purple section headings */
+}
+
+/* Input fields */
+input, textarea {
+  background-color: #FFF; /* White background */
+  color: #333;
+  border: 1px solid #6A4C9C; /* Purple border */
+  padding: 10px;
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #9B7DFF; /* Focused input border in lighter purple */
+}
+
+/* Footer (if any) */
+footer {
+  background-color: #FFF; /* White footer */
+  color: #6A4C9C;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for footer */
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar"; // Assuming Navbar.js is in the components folder
 import Home from "./pages/Home"; // Assuming Home.js is in the pages folder
 import Players from "./pages/Players"; // Assuming Players.js is in the pages folder
@@ -12,10 +12,9 @@ import PlayerList from "./components/PlayerList"; // Assuming PlayerList.js is i
 
 const App = () => {
   return (
-    <Router>
-      <div>
-        <Navbar /> {/* This will render the Navbar on every page */}
-
+    <div>
+      <Navbar /> {/* Navbar will be fixed at the top */}
+      <div className="main-content"> {/* Main content wrapper */}
         <Routes>
           {/* Define the routes for each page */}
           <Route path="/" element={<Home />} />
@@ -24,13 +23,11 @@ const App = () => {
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/contact-form" element={<ContactForm />} />
-          
-          {/* Add more routes for specific components if needed */}
           <Route path="/player-form" element={<PlayerForm />} />
           <Route path="/player-list" element={<PlayerList />} />
         </Routes>
       </div>
-    </Router>
+    </div>
   );
 };
 

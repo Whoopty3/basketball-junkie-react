@@ -1,25 +1,22 @@
-// src/components/Navbar.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Navbar.css';  // Make sure the styles are being imported
 
 function Navbar() {
-  // Manage state for the mobile menu toggle
   const [isOpen, setIsOpen] = useState(false);
 
-  // Toggle the menu when the button is clicked
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(!isOpen); // Toggle menu open/close
   };
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${isOpen ? 'open' : ''}`}>
       <h1>Basketball Junkie</h1>
       <button className="menu-toggle" onClick={toggleMenu}>
         ☰
       </button>
-      <ul>
-      <li><Link to="/">Home</Link></li>
+      <ul className={`nav-links ${isOpen ? 'show' : ''}`}>
+        <li><Link to="/">Home</Link></li>
         <li><Link to="/players">Players</Link></li>
         <li><Link to="/teams">Teams</Link></li>
         <li><Link to="/analysis">Analysis</Link></li>
@@ -30,6 +27,6 @@ function Navbar() {
       </ul>
     </nav>
   );
-};
+}
 
 export default Navbar;
