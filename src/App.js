@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar"; // Assuming Navbar.js is in the components folder
 import Home from "./pages/Home"; // Assuming Home.js is in the pages folder
 import Players from "./pages/Players"; // Assuming Players.js is in the pages folder
@@ -15,20 +15,20 @@ const App = () => {
     <Router>
       <div>
         <Navbar /> {/* This will render the Navbar on every page */}
-        
-        <Switch>
+
+        <Routes>
           {/* Define the routes for each page */}
-          <Route exact path="/" component={Home} />
-          <Route path="/players" component={Players} />
-          <Route path="/teams" component={Teams} />
-          <Route path="/analysis" component={Analysis} />
-          <Route path="/contact" component={Contact} />
-          <Route path="/contact-form" component={ContactForm} />
+          <Route path="/" element={<Home />} />
+          <Route path="/players" element={<Players />} />
+          <Route path="/teams" element={<Teams />} />
+          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/contact-form" element={<ContactForm />} />
           
           {/* Add more routes for specific components if needed */}
-          <Route path="/player-form" component={PlayerForm} />
-          <Route path="/player-list" component={PlayerList} />
-        </Switch>
+          <Route path="/player-form" element={<PlayerForm />} />
+          <Route path="/player-list" element={<PlayerList />} />
+        </Routes>
       </div>
     </Router>
   );
