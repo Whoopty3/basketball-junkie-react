@@ -6,7 +6,7 @@ const ParentComponent = () => {
   const [message, setMessage] = useState('');
   const [currentPlayer, setCurrentPlayer] = useState(null);
 
-  // Fetch player data when component mounts
+  
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
@@ -24,16 +24,16 @@ const ParentComponent = () => {
   return (
     <div>
       <h1>Basketball Players</h1>
-      {/* Pass setPlayers, setMessage, currentPlayer to PlayerForm */}
+      {}
       <PlayerForm
-        setPlayers={setPlayers}  // Passing setPlayers here
+        setPlayers={setPlayers}  
         setMessage={setMessage}
         player={currentPlayer}
       />
       <div>
         {message && <p>{message}</p>}
       </div>
-      {/* Display the list of players */}
+      {}
       <div>
         {players.map((player) => (
           <div key={player._id}>
