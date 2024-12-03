@@ -18,15 +18,18 @@ function Navbar() {
       <button className="menu-toggle" onClick={toggleMenu}>
         ☰
       </button>
-      <ul className={`nav-links ${isOpen ? 'open' : ''}`}>
-        <li><Link to="/">Home</Link></li>
+      <ul>
+      <li><Link to="/">Home</Link></li>
         <li><Link to="/players">Players</Link></li>
         <li><Link to="/teams">Teams</Link></li>
         <li><Link to="/analysis">Analysis</Link></li>
         <li><Link to="/contact">Contact</Link></li>
+        <li><Link to="/contact-form">Contact Form</Link></li>
+        <li><Link to="/player-form">Add Player</Link></li>
+        <li><Link to="/player-list">Player List</Link></li>
       </ul>
     </nav>
   );
-}
+};
 
 export default Navbar;
