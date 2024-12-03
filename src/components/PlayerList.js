@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import PlayerForm from './PlayerForm';
 
-const PlayerList = () => {
+const ParentComponent = () => {
   const [players, setPlayers] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [currentPlayer, setCurrentPlayer] = useState(null);
   const [message, setMessage] = useState('');
+  const [currentPlayer, setCurrentPlayer] = useState(null);
 
-  // Fetch players from the server on component mount
+  // Fetch player data when component mounts
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
-        const response = await fetch('/api/players');
+        const response = await fetch('https://basketball-junkie-backend.onrender.com/api/players');
         const data = await response.json();
-        setPlayers(data);
+        setPlayers(data);  // This sets the players data into state
       } catch (error) {
         console.error('Error fetching players:', error);
       }
@@ -22,57 +21,28 @@ const PlayerList = () => {
     fetchPlayers();
   }, []);
 
-  // Delete a player
-  const deletePlayer = async (id) => {
-    try {
-      const response = await fetch(`/api/players/${id}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        setPlayers(players.filter((player) => player._id !== id));
-        setMessage('Player deleted successfully');
-      } else {
-        setMessage('Failed to delete player');
-      }
-    } catch (error) {
-      console.error('Error deleting player:', error);
-      setMessage('Error deleting player');
-    }
-  };
-
-  // Edit a player (sets the current player to be edited)
-  const editPlayer = (player) => {
-    setIsEditing(true);
-    setCurrentPlayer(player);
-  };
-
   return (
     <div>
-      <h2>Player List</h2>
-      {message && <p>{message}</p>}
-
-      {/* Show the form to edit a player */}
-      {isEditing && (
-        <PlayerForm
-          player={currentPlayer}
-          setPlayers={setPlayers}
-          setIsEditing={setIsEditing}
-          setMessage={setMessage}
-        />
-      )}
-
-      {/* List of players */}
-      <ul>
+      <h1>Basketball Players</h1>
+      {/* Pass setPlayers, setMessage, currentPlayer to PlayerForm */}
+      <PlayerForm
+        setPlayers={setPlayers}  // Passing setPlayers here
+        setMessage={setMessage}
+        player={currentPlayer}
+      />
+      <div>
+        {message && <p>{message}</p>}
+      </div>
+      {/* Display the list of players */}
+      <div>
         {players.map((player) => (
-          <li key={player._id}>
-            <span>{player.name}</span> - {player.team} ({player.position})
-            <button onClick={() => editPlayer(player)}>Edit</button>
-            <button onClick={() => deletePlayer(player._id)}>Delete</button>
-          </li>
+          <div key={player._id}>
+            <p>{player.name} - {player.team}</p>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
 
-export default PlayerList;
+export default ParentComponent;
