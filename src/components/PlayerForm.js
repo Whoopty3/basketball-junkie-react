@@ -51,7 +51,7 @@ const PlayerForm = ({ setPlayers, player, setMessage }) => {
       let response;
       if (player) {
         // (PUT request)
-        response = await fetch(`https://basketball-junkie-backend.onrender.com/api/players`, {
+        response = await fetch(`https://basketball-junkie-backend.onrender.com/api/players${player._id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
