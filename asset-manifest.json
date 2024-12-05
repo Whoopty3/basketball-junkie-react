@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/basketball-junkie-react/static/css/main.847e0726.css",
-    "main.js": "/basketball-junkie-react/static/js/main.ea341bfd.js",
+    "main.js": "/basketball-junkie-react/static/js/main.72074ecb.js",
     "index.html": "/basketball-junkie-react/index.html",
     "main.847e0726.css.map": "/basketball-junkie-react/static/css/main.847e0726.css.map",
-    "main.ea341bfd.js.map": "/basketball-junkie-react/static/js/main.ea341bfd.js.map"
+    "main.72074ecb.js.map": "/basketball-junkie-react/static/js/main.72074ecb.js.map"
   },
   "entrypoints": [
     "static/css/main.847e0726.css",
-    "static/js/main.ea341bfd.js"
+    "static/js/main.72074ecb.js"
   ]
 }
