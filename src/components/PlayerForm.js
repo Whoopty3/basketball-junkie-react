@@ -74,7 +74,7 @@ const PlayerForm = ({ setPlayers, player, setMessage }) => {
         }
       } else {
         // (POST request)
-        response = await fetch('https://basketball-junkie-backend.onrender.com/api/players', {
+        response = await fetch('/api/players', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
