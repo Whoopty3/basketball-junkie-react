@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const PlayerForm = ({ setMessage, setErrorMessage }) => {
+const PlayerForm = () => {
   const [name, setName] = useState('');
   const [team, setTeam] = useState('');
   const [position, setPosition] = useState('');
@@ -9,12 +9,14 @@ const PlayerForm = ({ setMessage, setErrorMessage }) => {
   const [reboundsPerGame, setReboundsPerGame] = useState('');
   const [fieldGoalPercentage, setFieldGoalPercentage] = useState('');
   const [threePointPercentage, setThreePointPercentage] = useState('');
+  const [message, setMessage] = useState('');  // Local state for success message
+  const [errorMessage, setErrorMessage] = useState('');  // Local state for error message
   const [player, setPlayer] = useState(null); // Only used if editing an existing player
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage('');
-    
+    setErrorMessage(''); // Clear any previous error messages
+
     // Validate input fields
     if (!name || !team || !position || !pointsPerGame || !assistsPerGame || !reboundsPerGame || !fieldGoalPercentage || !threePointPercentage) {
       setErrorMessage('All fields are required');
@@ -85,7 +87,6 @@ const PlayerForm = ({ setMessage, setErrorMessage }) => {
         }
       }
     } catch (error) {
-      console.error('Error handling player:', error);
       setErrorMessage('Error handling player');
     }
   };

@@ -23,7 +23,6 @@ function Navbar() {
         <li><Link to="/contact">Contact</Link></li>
         <li><Link to="/contact-form">Contact Form</Link></li>
         <li><Link to="/player-form">Add Player</Link></li>
-        <li><Link to="/player-list">Player List</Link></li>
       </ul>
     </nav>
   );
