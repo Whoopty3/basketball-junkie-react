@@ -166,8 +166,8 @@ const PlayerForm = ({ setMessage, setErrorMessage }) => {
       </div>
       <button type="submit">Submit</button>
       <div>
-        {setMessage && <p>{setMessage}</p>}
-        {setErrorMessage && <p>{setErrorMessage}</p>}
+        {message && <p>{message}</p>}
+        {errorMessage && <p>{errorMessage}</p>}
       </div>
     </form>
   );

@@ -1,29 +1,35 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar"; // Assuming Navbar.js is in the components folder
-import Home from "./pages/Home"; // Assuming Home.js is in the pages folder
-import Players from "./pages/Players"; // Assuming Players.js is in the pages folder
-import Teams from "./pages/Teams"; // Assuming Teams.js is in the pages folder
-import Analysis from "./pages/Analysis"; // Assuming Analysis.js is in the pages folder
-import Contact from "./pages/Contact"; // Assuming Contact.js is in the pages folder
-import ContactForm from "./components/ContactForm"; // Assuming ContactForm.js is in the components folder
-import PlayerForm from "./components/PlayerForm"; // Assuming PlayerForm.js is in the components folder
+import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar'; 
+import Home from './pages/Home'; 
+import Players from './pages/Players'; 
+import Teams from './pages/Teams'; 
+import Analysis from './pages/Analysis'; 
+import Contact from './pages/Contact'; 
+import ContactForm from './components/ContactForm'; 
+import PlayerForm from './components/PlayerForm'; 
 
 const App = () => {
+  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   return (
     <div>
-      <Navbar /> {/* Navbar will be fixed at the top */}
-      <div className="main-content"> {/* Main content wrapper */}
+      <Navbar />
+      <div className="main-content">
         <Routes>
-          {/* Define the routes for each page */}
           <Route path="/" element={<Home />} />
           <Route path="/players" element={<Players />} />
           <Route path="/teams" element={<Teams />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/contact-form" element={<ContactForm />} />
-          <Route path="/player-form" element={<PlayerForm />} />
+          <Route path="/player-form" element={<PlayerForm setMessage={setMessage} setErrorMessage={setErrorMessage} />} />
         </Routes>
+      </div>
+      <div>
+        {message && <p>{message}</p>}
+        {errorMessage && <p>{errorMessage}</p>}
       </div>
     </div>
   );
