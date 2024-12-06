@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 
-const PlayerForm = () => {
-  const [name, setName] = useState('');
-  const [team, setTeam] = useState('');
-  const [position, setPosition] = useState('');
-  const [pointsPerGame, setPointsPerGame] = useState('');
-  const [assistsPerGame, setAssistsPerGame] = useState('');
-  const [reboundsPerGame, setReboundsPerGame] = useState('');
-  const [fieldGoalPercentage, setFieldGoalPercentage] = useState('');
-  const [threePointPercentage, setThreePointPercentage] = useState('');
-  const [message, setMessage] = useState('');  // Local state for success message
-  const [errorMessage, setErrorMessage] = useState('');  // Local state for error message
-  const [player, setPlayer] = useState(null); // Only used if editing an existing player
+const PlayerForm = ({ player, setPlayer }) => {
+  const [name, setName] = useState(player ? player.name : '');
+  const [team, setTeam] = useState(player ? player.team : '');
+  const [position, setPosition] = useState(player ? player.position : '');
+  const [pointsPerGame, setPointsPerGame] = useState(player ? player.points_per_game : '');
+  const [assistsPerGame, setAssistsPerGame] = useState(player ? player.assists_per_game : '');
+  const [reboundsPerGame, setReboundsPerGame] = useState(player ? player.rebounds_per_game : '');
+  const [fieldGoalPercentage, setFieldGoalPercentage] = useState(player ? player.field_goal_percentage : '');
+  const [threePointPercentage, setThreePointPercentage] = useState(player ? player.three_point_percentage : '');
+  const [message, setMessage] = useState('');  // Success message
+  const [errorMessage, setErrorMessage] = useState('');  // Error message
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrorMessage(''); // Clear any previous error messages
+    e.preventDefault();  // Prevent form submission from reloading the page
+    setErrorMessage('');  // Clear previous error messages
 
     // Validate input fields
     if (!name || !team || !position || !pointsPerGame || !assistsPerGame || !reboundsPerGame || !fieldGoalPercentage || !threePointPercentage) {
@@ -23,7 +22,7 @@ const PlayerForm = () => {
       return;
     }
 
-    // Convert inputs to numbers
+    // Convert inputs to numbers for validation
     const points = parseFloat(pointsPerGame);
     const assists = parseFloat(assistsPerGame);
     const rebounds = parseFloat(reboundsPerGame);
@@ -35,6 +34,7 @@ const PlayerForm = () => {
       return;
     }
 
+    // Validate field goal and three-point percentages
     if (fieldGoal < 0 || fieldGoal > 100 || threePoint < 0 || threePoint > 100) {
       setErrorMessage('Field goal percentage and 3-point percentage must be between 0 and 100');
       return;
@@ -54,7 +54,7 @@ const PlayerForm = () => {
     try {
       let response;
       if (player) {
-        // If we are editing an existing player, send a PUT request
+        // If editing an existing player, send a PUT request
         response = await fetch(`https://basketball-junkie-backend.onrender.com/api/players/${player._id}`, {
           method: 'PUT',
           headers: {
@@ -66,11 +66,12 @@ const PlayerForm = () => {
         if (response.ok) {
           const updatedPlayer = await response.json();
           setMessage('Player updated successfully');
+          setPlayer(updatedPlayer);  // Update the state to reflect the changes
         } else {
           setErrorMessage('Failed to update player');
         }
       } else {
-        // If we are adding a new player, send a POST request
+        // If adding a new player, send a POST request
         response = await fetch('https://basketball-junkie-backend.onrender.com/api/players', {
           method: 'POST',
           headers: {
@@ -88,6 +89,7 @@ const PlayerForm = () => {
       }
     } catch (error) {
       setErrorMessage('Error handling player');
+      console.error(error);  // Log any errors to the console for debugging
     }
   };
 
@@ -166,10 +168,9 @@ const PlayerForm = () => {
         />
       </div>
       <button type="submit">Submit</button>
-      <div>
-        {message && <p>{message}</p>}
-        {errorMessage && <p>{errorMessage}</p>}
-      </div>
+
+      {message && <p>{message}</p>}
+      {errorMessage && <p>{errorMessage}</p>}
     </form>
   );
 };
