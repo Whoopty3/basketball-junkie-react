@@ -11,7 +11,6 @@ const PlayerForm = ({ setPlayers, player, setMessage }) => {
   const [threePointPercentage, setThreePointPercentage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  
   useEffect(() => {
     if (player) {
       setName(player.name);
@@ -34,6 +33,11 @@ const PlayerForm = ({ setPlayers, player, setMessage }) => {
       return;
     }
 
+    if (pointsPerGame <= 0 || assistsPerGame <= 0 || reboundsPerGame <= 0 || fieldGoalPercentage < 0 || fieldGoalPercentage > 100 || threePointPercentage < 0 || threePointPercentage > 100) {
+      setErrorMessage('Please enter valid numeric values');
+      return;
+    }
+
     const playerData = {
       name,
       team,
@@ -51,7 +55,7 @@ const PlayerForm = ({ setPlayers, player, setMessage }) => {
       let response;
       if (player) {
         // (PUT request)
-        response = await fetch(`https://basketball-junkie-backend.onrender.com/api/players${player._id}`, {
+        response = await fetch(`https://basketball-junkie-backend.onrender.com/api/players/${player._id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
