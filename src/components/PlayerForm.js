@@ -1,77 +1,38 @@
 import React, { useState, useEffect } from 'react';
 
+
 const PlayerForm = () => {
   const [players, setPlayers] = useState([]);
-  const [formData, setFormData] = useState({
-    name: '',
-    team: '',
-    position: '',
-    pointsPerGame: '',
-    assistsPerGame: '',
-    reboundsPerGame: '',
-    fieldGoalPercentage: '',
-    threePointPercentage: '',
-  });
+  const [formData, setFormData] = useState({ name: '', team: '', position: '' });
   const [isEditing, setIsEditing] = useState(false);
   const [editPlayerId, setEditPlayerId] = useState(null);
   const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Fetch players from the server
-  const fetchPlayers = async () => {
-    try {
-      const response = await fetch('/api/players');
-      const data = await response.json();
-      setPlayers(data);
-    } catch (error) {
-      setErrorMessage('Failed to fetch players.');
-      console.error(error);
-    }
-  };
-
+  // Fetch players on component mount
   useEffect(() => {
     fetchPlayers();
   }, []);
 
-  // Validate the form data client-side
-  const validateForm = () => {
-    const {
-      name,
-      team,
-      position,
-      pointsPerGame,
-      assistsPerGame,
-      reboundsPerGame,
-      fieldGoalPercentage,
-      threePointPercentage,
-    } = formData;
-
-    if (
-      !name ||
-      !team ||
-      !position ||
-      isNaN(pointsPerGame) ||
-      isNaN(assistsPerGame) ||
-      isNaN(reboundsPerGame) ||
-      isNaN(fieldGoalPercentage) ||
-      isNaN(threePointPercentage)
-    ) {
-      return 'All fields must be filled out correctly.';
+  const fetchPlayers = async () => {
+    try {
+      const response = await fetch('/api/players');
+      if (!response.ok) throw new Error('Failed to fetch players.');
+      const data = await response.json();
+      setPlayers(data);
+    } catch (error) {
+      console.error('Error fetching players:', error);
+      setErrorMessage('Could not load player data.');
     }
-
-    if (
-      fieldGoalPercentage < 0 ||
-      fieldGoalPercentage > 100 ||
-      threePointPercentage < 0 ||
-      threePointPercentage > 100
-    ) {
-      return 'Percentages must be between 0 and 100.';
-    }
-
-    return '';
   };
 
-  // Handle form submission
+  const validateForm = () => {
+    if (!formData.name.trim() || !formData.team.trim() || !formData.position.trim()) {
+      return 'All fields are required.';
+    }
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const error = validateForm();
@@ -81,150 +42,109 @@ const PlayerForm = () => {
     }
 
     try {
-      if (isEditing) {
-        // PUT request to edit player
-        const response = await fetch(`/api/players/${editPlayerId}`, {
-          method: 'PUT',
+      const response = await fetch(
+        isEditing ? `/api/players/${editPlayerId}` : '/api/players',
+        {
+          method: isEditing ? 'PUT' : 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to edit player.');
         }
-
-        setMessage('Player edited successfully.');
-        setIsEditing(false);
-        setEditPlayerId(null);
-      } else {
-        // POST request to add player
-        const response = await fetch('/api/players', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to add player.');
-        }
-
-        setMessage('Player added successfully.');
-      }
-
-      setFormData({
-        name: '',
-        team: '',
-        position: '',
-        pointsPerGame: '',
-        assistsPerGame: '',
-        reboundsPerGame: '',
-        fieldGoalPercentage: '',
-        threePointPercentage: '',
-      });
+      );
+      if (!response.ok) throw new Error('Failed to process player.');
+      setMessage(isEditing ? 'Player updated successfully!' : 'Player added successfully!');
+      setFormData({ name: '', team: '', position: '' });
+      setIsEditing(false);
       fetchPlayers();
     } catch (error) {
-      setErrorMessage(error.message);
+      console.error(error);
+      setErrorMessage('An error occurred. Please try again.');
     }
   };
 
-  // Handle editing a player
   const handleEdit = (player) => {
+    setFormData(player);
     setIsEditing(true);
-    setEditPlayerId(player._id);
-    setFormData({
-      name: player.name,
-      team: player.team,
-      position: player.position,
-      pointsPerGame: player.points_per_game,
-      assistsPerGame: player.assists_per_game,
-      reboundsPerGame: player.rebounds_per_game,
-      fieldGoalPercentage: player.field_goal_percentage,
-      threePointPercentage: player.three_point_percentage,
-    });
+    setEditPlayerId(player.id);
   };
 
-  // Handle deleting a player
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/api/players/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete player.');
-      }
-
-      setMessage('Player deleted successfully.');
+      const response = await fetch(`/api/players/${id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to delete player.');
+      setMessage('Player deleted successfully!');
       fetchPlayers();
     } catch (error) {
-      setErrorMessage(error.message);
+      console.error(error);
+      setErrorMessage('An error occurred while deleting the player.');
     }
   };
 
-  // Handle input changes
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData({ ...formData, [name]: value });
   };
 
   return (
-    <div>
-      <h1>{isEditing ? 'Edit Player' : 'Add Player'}</h1>
-      <form onSubmit={handleSubmit}>
-        {['name', 'team', 'position', 'pointsPerGame', 'assistsPerGame', 'reboundsPerGame', 'fieldGoalPercentage', 'threePointPercentage'].map((field) => (
-          <div key={field}>
-            <label>{field.replace(/([A-Z])/g, ' $1')}: </label>
-            <input
-              type={field.includes('Percentage') || field.includes('PerGame') ? 'number' : 'text'}
-              name={field}
-              value={formData[field]}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        ))}
-        <button type="submit">{isEditing ? 'Save Changes' : 'Add Player'}</button>
+    <div className="player-form-container">
+      <h1>Add / Edit Player</h1>
+      {message && <p className="success-message">{message}</p>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      <form onSubmit={handleSubmit} className="player-form">
+        <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label>Team:</label>
+          <input
+            type="text"
+            name="team"
+            value={formData.team}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label>Position:</label>
+          <input
+            type="text"
+            name="position"
+            value={formData.position}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <button type="submit">{isEditing ? 'Update Player' : 'Add Player'}</button>
       </form>
-      {message && <p style={{ color: 'green' }}>{message}</p>}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
       <h2>Player List</h2>
-      <table>
+      <table className="player-table">
         <thead>
           <tr>
             <th>Name</th>
             <th>Team</th>
             <th>Position</th>
-            <th>Points</th>
-            <th>Assists</th>
-            <th>Rebounds</th>
-            <th>FG%</th>
-            <th>3P%</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {players.length > 0 ? (
-            players.map((player) => (
-              <tr key={player._id}>
-                <td>{player.name}</td>
-                <td>{player.team}</td>
-                <td>{player.position}</td>
-                <td>{player.points_per_game}</td>
-                <td>{player.assists_per_game}</td>
-                <td>{player.rebounds_per_game}</td>
-                <td>{player.field_goal_percentage}</td>
-                <td>{player.three_point_percentage}</td>
-                <td>
-                  <button onClick={() => handleEdit(player)}>Edit</button>
-                  <button onClick={() => handleDelete(player._id)}>Delete</button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="9">No players available.</td>
+          {players.map((player) => (
+            <tr key={player.id}>
+              <td>{player.name}</td>
+              <td>{player.team}</td>
+              <td>{player.position}</td>
+              <td>
+                <button onClick={() => handleEdit(player)} className="edit-btn">Edit</button>
+                <button onClick={() => handleDelete(player.id)} className="delete-btn">Delete</button>
+              </td>
             </tr>
-          )}
+          ))}
         </tbody>
       </table>
     </div>
