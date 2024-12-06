@@ -26,6 +26,7 @@ const PlayerForm = ({ setPlayers, player, setMessage }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(''); // Clear error message before validation
 
     // Validate input fields
     if (!name || !team || !position || !pointsPerGame || !assistsPerGame || !reboundsPerGame || !fieldGoalPercentage || !threePointPercentage) {
@@ -33,8 +34,20 @@ const PlayerForm = ({ setPlayers, player, setMessage }) => {
       return;
     }
 
-    if (pointsPerGame <= 0 || assistsPerGame <= 0 || reboundsPerGame <= 0 || fieldGoalPercentage < 0 || fieldGoalPercentage > 100 || threePointPercentage < 0 || threePointPercentage > 100) {
+    // Convert inputs to numbers
+    const points = parseFloat(pointsPerGame);
+    const assists = parseFloat(assistsPerGame);
+    const rebounds = parseFloat(reboundsPerGame);
+    const fieldGoal = parseFloat(fieldGoalPercentage);
+    const threePoint = parseFloat(threePointPercentage);
+
+    if (isNaN(points) || isNaN(assists) || isNaN(rebounds) || isNaN(fieldGoal) || isNaN(threePoint)) {
       setErrorMessage('Please enter valid numeric values');
+      return;
+    }
+
+    if (fieldGoal < 0 || fieldGoal > 100 || threePoint < 0 || threePoint > 100) {
+      setErrorMessage('Field goal percentage and 3-point percentage must be between 0 and 100');
       return;
     }
 
@@ -42,11 +55,11 @@ const PlayerForm = ({ setPlayers, player, setMessage }) => {
       name,
       team,
       position,
-      points_per_game: pointsPerGame,
-      assists_per_game: assistsPerGame,
-      rebounds_per_game: reboundsPerGame,
-      field_goal_percentage: fieldGoalPercentage,
-      three_point_percentage: threePointPercentage,
+      points_per_game: points,
+      assists_per_game: assists,
+      rebounds_per_game: rebounds,
+      field_goal_percentage: fieldGoal,
+      three_point_percentage: threePoint,
     };
 
     console.log('playerData to send:', playerData);  // Add this log to ensure data is correct
