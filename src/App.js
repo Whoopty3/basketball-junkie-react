@@ -8,7 +8,6 @@ import Analysis from "./pages/Analysis"; // Assuming Analysis.js is in the pages
 import Contact from "./pages/Contact"; // Assuming Contact.js is in the pages folder
 import ContactForm from "./components/ContactForm"; // Assuming ContactForm.js is in the components folder
 import PlayerForm from "./components/PlayerForm"; // Assuming PlayerForm.js is in the components folder
-import PlayerList from "./components/PlayerList"; // Assuming PlayerList.js is in the components folder
 
 const App = () => {
   return (
@@ -24,7 +23,6 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/contact-form" element={<ContactForm />} />
           <Route path="/player-form" element={<PlayerForm />} />
-          <Route path="/player-list" element={<PlayerList />} />
         </Routes>
       </div>
     </div>
