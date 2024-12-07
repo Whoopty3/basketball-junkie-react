@@ -1,32 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PlayerForm from "./PlayerForm";
 
 const ParentComponent = () => {
   const [players, setPlayers] = useState([]);
-
-  useEffect(() => {
-    // Fetch players from backend API
-    const fetchPlayers = async () => {
-      try {
-        const response = await fetch("https://basketball-junkie-backend.onrender.com/api/players");
-        const data = await response.json();
-        setPlayers(data);
-      } catch (error) {
-        console.error("Error fetching players:", error);
-      }
-    };
-    fetchPlayers();
-  }, []);
+  const [currentPlayer, setCurrentPlayer] = useState(null);
 
   return (
     <div>
-      <h1>Basketball Players</h1>
-      <PlayerForm setPlayers={setPlayers} />
-      <ul>
+      <PlayerForm
+        setPlayers={setPlayers}
+        currentPlayer={currentPlayer}
+        setCurrentPlayer={setCurrentPlayer}
+      />
+      {/* Render list of players */}
+      <div>
         {players.map((player) => (
-          <li key={player._id}>{player.name}</li>
+          <div key={player._id}>
+            <h3>{player.name}</h3>
+            <button onClick={() => setCurrentPlayer(player)}>Edit</button>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
