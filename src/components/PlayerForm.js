@@ -1,172 +1,119 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-const PlayerForm = (props) => {
-  const [inputs, setInputs] = useState({});
-  const [result, setResult] = useState("");
-
-  const handleChange = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    setInputs((values) => ({ ...values, [name]: value }));
-  };
-
-  const handleImageChange = (event) => {
-    const name = event.target.name;
-    const value = event.target.files[0];
-    setInputs((values) => ({ ...values, [name]: value }));
-  };
-
-  const addPlayerToServer = async (event) => {
-    event.preventDefault();
-    setResult("Sending....");
-
-    const formData = new FormData(event.target);
-
-    const response = await fetch("http://localhost:3001/api/players", {
-      method: "POST",
-      body: formData,
+const PlayerForm = ({ addPlayer }) => {
+    const [newPlayer, setNewPlayer] = useState({
+        name: '',
+        team: '',
+        points: '',
+        assists: '',
+        rebounds: '',
+        fieldGoalPercentage: '',
+        threePointPercentage: ''
     });
 
-    if (response.status === 200) {
-      setResult("Player successfully added!");
-      props.showNewPlayer(await response.json());
-      event.target.reset();
-      props.closeDialog();
-    } else {
-      setResult("Error adding player");
-    }
-  };
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setNewPlayer({
+            ...newPlayer,
+            [name]: value
+        });
+    };
 
-  return (
-    <div id="add-dialog" className="w3-modal">
-      <div className="w3-modal-content">
-        <div className="w3-container">
-          <span
-            id="dialog-close"
-            className="w3-button w3-display-topright"
-            onClick={props.closeDialog}
-          >
-            &times;
-          </span>
-          <form id="add-player-form" onSubmit={addPlayerToServer}>
-            <p>
-              <label htmlFor="name">Player Name:</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                value={inputs.name || ""}
-                onChange={handleChange}
-              />
-            </p>
-            <p>
-              <label htmlFor="team">Team:</label>
-              <input
-                type="text"
-                id="team"
-                name="team"
-                required
-                value={inputs.team || ""}
-                onChange={handleChange}
-              />
-            </p>
-            <p>
-              <label htmlFor="position">Position:</label>
-              <input
-                type="text"
-                id="position"
-                name="position"
-                required
-                value={inputs.position || ""}
-                onChange={handleChange}
-              />
-            </p>
-            <p>
-              <label htmlFor="pointsPerGame">Points per Game:</label>
-              <input
-                type="number"
-                id="pointsPerGame"
-                name="pointsPerGame"
-                required
-                value={inputs.pointsPerGame || ""}
-                onChange={handleChange}
-              />
-            </p>
-            <p>
-              <label htmlFor="assistsPerGame">Assists per Game:</label>
-              <input
-                type="number"
-                id="assistsPerGame"
-                name="assistsPerGame"
-                required
-                value={inputs.assistsPerGame || ""}
-                onChange={handleChange}
-              />
-            </p>
-            <p>
-              <label htmlFor="reboundsPerGame">Rebounds per Game:</label>
-              <input
-                type="number"
-                id="reboundsPerGame"
-                name="reboundsPerGame"
-                required
-                value={inputs.reboundsPerGame || ""}
-                onChange={handleChange}
-              />
-            </p>
-            <p>
-              <label htmlFor="fieldGoalPercentage">Field Goal %:</label>
-              <input
-                type="number"
-                id="fieldGoalPercentage"
-                name="fieldGoalPercentage"
-                required
-                value={inputs.fieldGoalPercentage || ""}
-                onChange={handleChange}
-              />
-            </p>
-            <p>
-              <label htmlFor="threePointPercentage">3-Point %:</label>
-              <input
-                type="number"
-                id="threePointPercentage"
-                name="threePointPercentage"
-                required
-                value={inputs.threePointPercentage || ""}
-                onChange={handleChange}
-              />
-            </p>
+    const handleAddPlayer = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('https://basketball-junkie-backend.onrender.com/api/players', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newPlayer),
+            });
 
-            <section className="columns">
-              <p id="img-prev-section">
-                <img
-                  id="img-prev"
-                  alt=""
-                  src={inputs.img ? URL.createObjectURL(inputs.img) : ""}
-                />
-              </p>
-              <p id="img-upload">
-                <label htmlFor="img">Upload Image:</label>
-                <input
-                  type="file"
-                  id="img"
-                  name="img"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-              </p>
-            </section>
+            if (response.ok) {
+                const player = await response.json();
+                addPlayer(player); // Add the new player to the list
+                setNewPlayer({ name: '', team: '', points: '', assists: '', rebounds: '', fieldGoalPercentage: '', threePointPercentage: '' }); // Clear the form
+            } else {
+                alert('Failed to add player');
+            }
+        } catch (error) {
+            console.error('Error adding player:', error);
+            alert('An error occurred while adding the player');
+        }
+    };
 
-            <p>
-              <button type="submit">Submit</button>
-            </p>
-            <p>{result}</p>
-          </form>
+    return (
+        <div>
+            <h2>Add Player</h2>
+            <form onSubmit={handleAddPlayer}>
+                <div>
+                    <label>Name: </label>
+                    <input
+                        type="text"
+                        name="name"
+                        value={newPlayer.name}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label>Team: </label>
+                    <input
+                        type="text"
+                        name="team"
+                        value={newPlayer.team}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label>Points: </label>
+                    <input
+                        type="number"
+                        name="points"
+                        value={newPlayer.points}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label>Assists: </label>
+                    <input
+                        type="number"
+                        name="assists"
+                        value={newPlayer.assists}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label>Rebounds: </label>
+                    <input
+                        type="number"
+                        name="rebounds"
+                        value={newPlayer.rebounds}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label>Field Goal %: </label>
+                    <input
+                        type="number"
+                        name="fieldGoalPercentage"
+                        value={newPlayer.fieldGoalPercentage}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label>3P %: </label>
+                    <input
+                        type="number"
+                        name="threePointPercentage"
+                        value={newPlayer.threePointPercentage}
+                        onChange={handleChange}
+                    />
+                </div>
+                <button type="submit">Add Player</button>
+            </form>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default PlayerForm;

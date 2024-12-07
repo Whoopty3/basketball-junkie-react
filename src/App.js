@@ -7,7 +7,7 @@ import Teams from './pages/Teams';
 import Analysis from './pages/Analysis'; 
 import Contact from './pages/Contact'; 
 import ContactForm from './components/ContactForm'; 
-import ParentComponent from './components/ParentComponent';  // Import ParentComponent
+import PlayerList from './components/PlayerList';  // Import PlayerList
 import PlayerForm from './components/PlayerForm';  // Import PlayerForm
 
 const App = () => {
@@ -26,8 +26,8 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/contact-form" element={<ContactForm />} />
 
-          {/* Routes for ParentComponent */}
-          <Route path="/parent-component" element={<ParentComponent />} /> {/* Route to ParentComponent */}
+          {/* Routes for PlayerList */}
+          <Route path="/player-list" element={<PlayerList />} /> {/* This is for displaying the list of players */}
           
           {/* Routes for PlayerForm */}
           <Route path="/player-form" element={<PlayerForm />} /> {/* This is for adding or editing player */}
