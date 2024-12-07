@@ -1,126 +1,201 @@
 import React, { useState, useEffect } from 'react';
 
-const PlayerList = () => {
-  const [players, setPlayers] = useState([]);
-  const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const [formData, setFormData] = useState({ name: '', position: '', team: '' });
-  const [formMessage, setFormMessage] = useState('');
+const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    points: '',
+    assists: '',
+    rebounds: '',
+    fieldGoalPercentage: '',
+    threePointPercentage: ''
+  });
 
-  // Fetch players from the server
+  // When selectedPlayer changes, update the form data
   useEffect(() => {
-    fetch('/api/players')
-      .then((response) => response.json())
-      .then((data) => {
-        setPlayers(data);
-      })
-      .catch((error) => console.error('Error fetching players:', error));
-  }, []);
+    if (selectedPlayer) {
+      setFormData({
+        name: selectedPlayer.name,
+        points: selectedPlayer.points,
+        assists: selectedPlayer.assists,
+        rebounds: selectedPlayer.rebounds,
+        fieldGoalPercentage: selectedPlayer.fieldGoalPercentage,
+        threePointPercentage: selectedPlayer.threePointPercentage
+      });
+    } else {
+      // If no player is selected, clear the form
+      setFormData({
+        name: '',
+        points: '',
+        assists: '',
+        rebounds: '',
+        fieldGoalPercentage: '',
+        threePointPercentage: ''
+      });
+    }
+  }, [selectedPlayer]);
 
-  // Handle editing a player
-  const handleEdit = async (e) => {
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Handle form submit (POST or PUT)
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.position || !formData.team) {
-      setFormMessage('All fields are required.');
+
+    // Validate form data
+    if (!formData.name || !formData.points || !formData.assists || !formData.rebounds || !formData.fieldGoalPercentage || !formData.threePointPercentage) {
+      alert('Please fill out all fields.');
       return;
     }
 
-    const updatedPlayer = { ...formData };
     try {
-      const response = await fetch(`/api/players/${selectedPlayer.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedPlayer),
-      });
+      let response;
+      if (selectedPlayer) {
+        // PUT request to update the existing player
+        response = await fetch(`https://basketball-junkie-backend.onrender.com/api/players/${selectedPlayer.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+      } else {
+        // POST request to create a new player
+        response = await fetch('https://basketball-junkie-backend.onrender.com/api/players', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+      }
 
       if (response.ok) {
-        const updatedPlayers = players.map((player) =>
-          player.id === selectedPlayer.id ? { ...player, ...updatedPlayer } : player
-        );
-        setPlayers(updatedPlayers);
-        setFormMessage('Player successfully updated!');
+        const updatedPlayer = await response.json();
+        // Add or update the player in the state
+        if (selectedPlayer) {
+          setPlayers((prev) =>
+            prev.map((player) =>
+              player.id === selectedPlayer.id ? { ...player, ...updatedPlayer } : player
+            )
+          );
+          alert('Player updated successfully!');
+        } else {
+          setPlayers((prev) => [...prev, updatedPlayer]);
+          alert('Player added successfully!');
+        }
+        setSelectedPlayer(null); // Reset the selected player after adding/updating
       } else {
-        setFormMessage('Error updating player.');
+        console.error('Error:', response);
+        alert('Failed to save player.');
       }
     } catch (error) {
-      console.error('Error editing player:', error);
-      setFormMessage('Error editing player.');
+      console.error('Error:', error);
+      alert('Error saving player.');
     }
   };
 
-  // Handle deleting a player
-  const handleDelete = async (playerId) => {
+  // Handle player deletion
+  const handleDelete = async () => {
+    if (!selectedPlayer) return;
+
     try {
-      const response = await fetch(`/api/players/${playerId}`, {
+      const response = await fetch(`https://basketball-junkie-backend.onrender.com/api/players/${selectedPlayer.id}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
-        setPlayers(players.filter((player) => player.id !== playerId));
-        setFormMessage('Player successfully deleted!');
+        setPlayers((prev) => prev.filter((player) => player.id !== selectedPlayer.id));
+        alert('Player deleted successfully!');
+        setSelectedPlayer(null); // Reset the selected player after deletion
       } else {
-        setFormMessage('Error deleting player.');
+        console.error('Error:', response);
+        alert('Failed to delete player.');
       }
     } catch (error) {
-      console.error('Error deleting player:', error);
-      setFormMessage('Error deleting player.');
+      console.error('Error:', error);
+      alert('Error deleting player.');
     }
   };
 
-  // Handle input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
   return (
-    <div>
-      <h1>Player List</h1>
-      {formMessage && <p>{formMessage}</p>}
+    <form onSubmit={handleSubmit}>
+      <h2>{selectedPlayer ? 'Edit Player' : 'Add Player'}</h2>
 
-      {/* Edit Form */}
+      <div>
+        <label>Name:</label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div>
+        <label>Points:</label>
+        <input
+          type="number"
+          name="points"
+          value={formData.points}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div>
+        <label>Assists:</label>
+        <input
+          type="number"
+          name="assists"
+          value={formData.assists}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div>
+        <label>Rebounds:</label>
+        <input
+          type="number"
+          name="rebounds"
+          value={formData.rebounds}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div>
+        <label>Field Goal Percentage:</label>
+        <input
+          type="number"
+          name="fieldGoalPercentage"
+          value={formData.fieldGoalPercentage}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div>
+        <label>Three Point Percentage:</label>
+        <input
+          type="number"
+          name="threePointPercentage"
+          value={formData.threePointPercentage}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <button type="submit">{selectedPlayer ? 'Update Player' : 'Add Player'}</button>
+      
       {selectedPlayer && (
-        <form onSubmit={handleEdit}>
-          <h2>Edit Player</h2>
-          <label>Name:</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-          />
-          <label>Position:</label>
-          <input
-            type="text"
-            name="position"
-            value={formData.position}
-            onChange={handleInputChange}
-          />
-          <label>Team:</label>
-          <input
-            type="text"
-            name="team"
-            value={formData.team}
-            onChange={handleInputChange}
-          />
-          <button type="submit">Update Player</button>
-        </form>
+        <button type="button" onClick={handleDelete} style={{ backgroundColor: 'red', color: 'white' }}>
+          Delete Player
+        </button>
       )}
-
-      {/* List of Players */}
-      <ul>
-        {players.map((player) => (
-          <li key={player.id}>
-            <span>{player.name} - {player.position} - {player.team}</span>
-            <button onClick={() => setSelectedPlayer(player)}>Edit</button>
-            <button onClick={() => handleDelete(player.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    </form>
   );
 };
 
-export default PlayerList;
+export default PlayerForm;
