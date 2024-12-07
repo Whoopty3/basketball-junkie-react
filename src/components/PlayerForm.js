@@ -1,84 +1,170 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
 
-const PlayerForm = () => {
-  const { id } = useParams(); // Get player ID from the route
-  const navigate = useNavigate();
-  const [player, setPlayer] = useState({ name: '', position: '', team: '' });
-  const [statusMessage, setStatusMessage] = useState('');
-  const [formType, setFormType] = useState('add'); // Tracks form type (add, edit, delete)
+const PlayerForm = (props) => {
+  const [inputs, setInputs] = useState({});
+  const [result, setResult] = useState("");
 
-  useEffect(() => {
-    if (id) {
-      setFormType('edit'); // Set form type to 'edit' if an ID is present
-      // Fetch player data for editing (replace with actual API call)
-      fetch(`/api/players/${id}`)
-        .then((response) => response.json())
-        .then((data) => setPlayer(data))
-        .catch((error) => setStatusMessage('Failed to load player data'));
-    }
-  }, [id]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const method = formType === 'edit' ? 'PUT' : 'POST';
-    const url = formType === 'edit' ? `/api/players/${id}` : '/api/players';
-
-    fetch(url, {
-      method: method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(player),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setStatusMessage(`Player ${formType === 'edit' ? 'updated' : 'added'} successfully.`);
-        navigate('/players');
-      })
-      .catch((error) => setStatusMessage('Error saving player.'));
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setInputs((values) => ({ ...values, [name]: value }));
   };
 
-  const handleDelete = () => {
-    if (window.confirm('Are you sure you want to delete this player?')) {
-      fetch(`/api/players/${id}`, { method: 'DELETE' })
-        .then(() => {
-          setStatusMessage('Player deleted successfully.');
-          navigate('/players');
-        })
-        .catch(() => setStatusMessage('Error deleting player.'));
-    }
+  const handleImageChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.files[0];
+    setInputs((values) => ({ ...values, [name]: value }));
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPlayer((prev) => ({ ...prev, [name]: value }));
+  const addPlayerToServer = async (event) => {
+    event.preventDefault();
+    setResult("Sending....");
+
+    const formData = new FormData(event.target);
+
+    const response = await fetch("http://localhost:3001/api/players", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.status === 200) {
+      setResult("Player successfully added!");
+      props.showNewPlayer(await response.json());
+      event.target.reset();
+      props.closeDialog();
+    } else {
+      setResult("Error adding player");
+    }
   };
 
   return (
-    <div>
-      <h1>{formType === 'edit' ? 'Edit Player' : 'Add Player'}</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name:</label>
-          <input type="text" name="name" value={player.name} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Position:</label>
-          <input type="text" name="position" value={player.position} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Team:</label>
-          <input type="text" name="team" value={player.team} onChange={handleChange} required />
-        </div>
-        <button type="submit">{formType === 'edit' ? 'Update Player' : 'Add Player'}</button>
-      </form>
+    <div id="add-dialog" className="w3-modal">
+      <div className="w3-modal-content">
+        <div className="w3-container">
+          <span
+            id="dialog-close"
+            className="w3-button w3-display-topright"
+            onClick={props.closeDialog}
+          >
+            &times;
+          </span>
+          <form id="add-player-form" onSubmit={addPlayerToServer}>
+            <p>
+              <label htmlFor="name">Player Name:</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                value={inputs.name || ""}
+                onChange={handleChange}
+              />
+            </p>
+            <p>
+              <label htmlFor="team">Team:</label>
+              <input
+                type="text"
+                id="team"
+                name="team"
+                required
+                value={inputs.team || ""}
+                onChange={handleChange}
+              />
+            </p>
+            <p>
+              <label htmlFor="position">Position:</label>
+              <input
+                type="text"
+                id="position"
+                name="position"
+                required
+                value={inputs.position || ""}
+                onChange={handleChange}
+              />
+            </p>
+            <p>
+              <label htmlFor="pointsPerGame">Points per Game:</label>
+              <input
+                type="number"
+                id="pointsPerGame"
+                name="pointsPerGame"
+                required
+                value={inputs.pointsPerGame || ""}
+                onChange={handleChange}
+              />
+            </p>
+            <p>
+              <label htmlFor="assistsPerGame">Assists per Game:</label>
+              <input
+                type="number"
+                id="assistsPerGame"
+                name="assistsPerGame"
+                required
+                value={inputs.assistsPerGame || ""}
+                onChange={handleChange}
+              />
+            </p>
+            <p>
+              <label htmlFor="reboundsPerGame">Rebounds per Game:</label>
+              <input
+                type="number"
+                id="reboundsPerGame"
+                name="reboundsPerGame"
+                required
+                value={inputs.reboundsPerGame || ""}
+                onChange={handleChange}
+              />
+            </p>
+            <p>
+              <label htmlFor="fieldGoalPercentage">Field Goal %:</label>
+              <input
+                type="number"
+                id="fieldGoalPercentage"
+                name="fieldGoalPercentage"
+                required
+                value={inputs.fieldGoalPercentage || ""}
+                onChange={handleChange}
+              />
+            </p>
+            <p>
+              <label htmlFor="threePointPercentage">3-Point %:</label>
+              <input
+                type="number"
+                id="threePointPercentage"
+                name="threePointPercentage"
+                required
+                value={inputs.threePointPercentage || ""}
+                onChange={handleChange}
+              />
+            </p>
 
-      {formType === 'edit' && (
-        <button onClick={handleDelete} style={{ backgroundColor: 'red', color: 'white' }}>
-          Delete Player
-        </button>
-      )}
+            <section className="columns">
+              <p id="img-prev-section">
+                <img
+                  id="img-prev"
+                  alt=""
+                  src={inputs.img ? URL.createObjectURL(inputs.img) : ""}
+                />
+              </p>
+              <p id="img-upload">
+                <label htmlFor="img">Upload Image:</label>
+                <input
+                  type="file"
+                  id="img"
+                  name="img"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+              </p>
+            </section>
 
-      {statusMessage && <p>{statusMessage}</p>}
+            <p>
+              <button type="submit">Submit</button>
+            </p>
+            <p>{result}</p>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
