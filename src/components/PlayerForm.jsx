@@ -13,54 +13,61 @@ const PlayerForm = ({ onPlayerAdd, onPlayerDelete }) => {
     setPlayerData({ ...playerData, [name]: value });
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     // Validate form inputs
-    if (!playerData.name || !playerData.team || !playerData.position || !playerData.pointsPerGame) {
-      alert('All fields are required!');
+    if (!playerData.name || !playerData.team || !playerData.position || isNaN(playerData.pointsPerGame) || playerData.pointsPerGame === '') {
+      alert('All fields are required, and Points per Game must be a valid number!');
       return;
     }
 
-    // Make POST request to add player
-    fetch('https://basketball-junkie-backend.onrender.com/api/players', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(playerData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to add player');
-        }
-        return response.json();
-      })
-      .then((newPlayer) => {
-        onPlayerAdd(newPlayer); // Notify parent component about the new player
-        setPlayerData({
-          name: '',
-          team: '',
-          position: '',
-          pointsPerGame: '',
-        });
-      })
-      .catch((error) => console.error('Error adding player:', error));
+    try {
+      const response = await fetch('https://basketball-junkie-backend.onrender.com/api/players', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(playerData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to add player: ${response.statusText}`);
+      }
+
+      const newPlayer = await response.json();
+      console.log('Player added successfully:', newPlayer);
+      onPlayerAdd(newPlayer); // Notify parent component about the new player
+
+      // Reset the form
+      setPlayerData({
+        name: '',
+        team: '',
+        position: '',
+        pointsPerGame: '',
+      });
+    } catch (error) {
+      console.error('Error adding player:', error);
+      alert('Failed to add the player. Please try again later.');
+    }
   };
 
-  const handleDelete = (id) => {
-    // Make DELETE request to remove player
-    fetch(`https://basketball-junkie-backend.onrender.com/api/players/${id}`, {
-      method: 'DELETE',
-    })
-      .then((response) => {
-        if (response.ok) {
-          onPlayerDelete(id); // Notify parent component about the deleted player
-        } else {
-          console.error('Failed to delete player');
-        }
-      })
-      .catch((error) => console.error('Error deleting player:', error));
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`https://basketball-junkie-backend.onrender.com/api/players/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete player: ${response.statusText}`);
+      }
+
+      console.log(`Player with ID ${id} deleted successfully`);
+      onPlayerDelete(id); // Notify parent component about the deleted player
+    } catch (error) {
+      console.error('Error deleting player:', error);
+      alert('Failed to delete the player. Please try again later.');
+    }
   };
 
   return (

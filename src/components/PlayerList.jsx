@@ -14,7 +14,7 @@ const PlayerList = () => {
         }
 
         const result = await response.json();
-        
+
         // Ensure the response contains a valid array
         if (result.success && Array.isArray(result.data)) {
           setPlayers(result.data); // Set players from the 'data' array
@@ -40,10 +40,10 @@ const PlayerList = () => {
     const player = players[i];
     playerList.push(
       <li key={player._id}>
-        {player.name} - {player.team} - {player.position}
-        <p>Points: {player.points_per_game}</p>
-        <p>Assists: {player.assists_per_game}</p>
-        <p>Rebounds: {player.rebounds_per_game}</p>
+        <strong>{player.name}</strong> - {player.team} ({player.position})
+        <p>Points per Game: {player.points_per_game}</p>
+        <p>Assists per Game: {player.assists_per_game}</p>
+        <p>Rebounds per Game: {player.rebounds_per_game}</p>
         <p>Field Goal %: {player.field_goal_percentage}</p>
         <p>3-Point %: {player.three_point_percentage}</p>
       </li>
