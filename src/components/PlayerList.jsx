@@ -34,24 +34,27 @@ const PlayerList = () => {
     return <p>{errorMessage}</p>;
   }
 
+  // Creating a list manually using a loop (without using map)
+  const playerList = [];
+  for (let i = 0; i < players.length; i++) {
+    const player = players[i];
+    playerList.push(
+      <li key={player._id}>
+        {player.name} - {player.team} - {player.position}
+        <p>Points: {player.points_per_game}</p>
+        <p>Assists: {player.assists_per_game}</p>
+        <p>Rebounds: {player.rebounds_per_game}</p>
+        <p>Field Goal %: {player.field_goal_percentage}</p>
+        <p>3-Point %: {player.three_point_percentage}</p>
+      </li>
+    );
+  }
+
   return (
     <div>
       <h1>Player List</h1>
       <ul>
-        {players.length > 0 ? (
-          players.map((player) => (
-            <li key={player._id}>
-              {player.name} - {player.team} - {player.position}
-              <p>Points: {player.points_per_game}</p>
-              <p>Assists: {player.assists_per_game}</p>
-              <p>Rebounds: {player.rebounds_per_game}</p>
-              <p>Field Goal %: {player.field_goal_percentage}</p>
-              <p>3-Point %: {player.three_point_percentage}</p>
-            </li>
-          ))
-        ) : (
-          <p>No players found.</p>
-        )}
+        {playerList.length > 0 ? playerList : <p>No players found.</p>}
       </ul>
     </div>
   );
