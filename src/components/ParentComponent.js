@@ -3,12 +3,9 @@ import PlayerForm from "./PlayerForm";
 
 const ParentComponent = () => {
   const [players, setPlayers] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [currentPlayer, setCurrentPlayer] = useState(null);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    // Fetch players from the server
+    // Fetch players from backend API
     const fetchPlayers = async () => {
       try {
         const response = await fetch("https://basketball-junkie-backend.onrender.com/api/players");
@@ -18,45 +15,16 @@ const ParentComponent = () => {
         console.error("Error fetching players:", error);
       }
     };
-
     fetchPlayers();
   }, []);
 
-  const handleEdit = (player) => {
-    setIsEditing(true);
-    setCurrentPlayer(player);
-  };
-
-  const handleDelete = async (playerId) => {
-    try {
-      await fetch(`https://basketball-junkie-backend.onrender.com/api/players/${playerId}`, {
-        method: "DELETE",
-      });
-      setPlayers(players.filter((player) => player._id !== playerId));
-      setMessage("Player deleted successfully.");
-    } catch (error) {
-      console.error("Error deleting player:", error);
-      setMessage("Failed to delete player.");
-    }
-  };
-
   return (
     <div>
-      <h1>Player Management</h1>
-      {message && <p>{message}</p>}
-      <PlayerForm
-        player={currentPlayer}
-        setPlayers={setPlayers}
-        setIsEditing={setIsEditing}
-        setMessage={setMessage}
-      />
+      <h1>Basketball Players</h1>
+      <PlayerForm setPlayers={setPlayers} />
       <ul>
         {players.map((player) => (
-          <li key={player._id}>
-            {player.name} - {player.team}
-            <button onClick={() => handleEdit(player)}>Edit</button>
-            <button onClick={() => handleDelete(player._id)}>Delete</button>
-          </li>
+          <li key={player._id}>{player.name}</li>
         ))}
       </ul>
     </div>
