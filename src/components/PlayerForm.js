@@ -53,16 +53,20 @@ const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
 
     try {
       let response;
+      const url = selectedPlayer
+        ? `https://basketball-junkie-backend.onrender.com/api/players/${selectedPlayer.id}`
+        : 'https://basketball-junkie-backend.onrender.com/api/players';
+
       if (selectedPlayer) {
         // PUT request to update the existing player
-        response = await fetch(`https://basketball-junkie-backend.onrender.com/api/players/${selectedPlayer.id}`, {
+        response = await fetch(url, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
         });
       } else {
         // POST request to create a new player
-        response = await fetch('https://basketball-junkie-backend.onrender.com/api/players', {
+        response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
@@ -72,27 +76,23 @@ const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
       if (response.ok) {
         const updatedPlayer = await response.json();
 
-        // Check if setPlayers is a valid function and that prev is an array
-        if (typeof setPlayers === 'function') {
-          setPlayers((prev) => {
-            if (Array.isArray(prev)) {
-              return selectedPlayer
-                ? prev.map((player) =>
-                    player.id === selectedPlayer.id ? { ...player, ...updatedPlayer } : player
-                  )
-                : [...prev, updatedPlayer];
+        setPlayers((prev) => {
+          if (Array.isArray(prev)) {
+            if (selectedPlayer) {
+              // Update existing player
+              return prev.map((player) =>
+                player.id === selectedPlayer.id ? { ...player, ...updatedPlayer } : player
+              );
             } else {
-              console.error("setPlayers: 'prev' is not an array");
-              return prev; // Ensure state is maintained in case of error
+              // Add new player
+              return [...prev, updatedPlayer];
             }
-          });
+          }
+          return prev; // Return unchanged state if 'prev' is not an array
+        });
 
-          alert(selectedPlayer ? 'Player updated successfully!' : 'Player added successfully!');
-        } else {
-          console.error("setPlayers is not a function");
-        }
-
-        setSelectedPlayer(null); // Reset the selected player after adding/updating
+        alert(selectedPlayer ? 'Player updated successfully!' : 'Player added successfully!');
+        setSelectedPlayer(null); // Reset selected player after add/update
       } else {
         console.error('Error:', response);
         alert('Failed to save player.');
@@ -115,7 +115,7 @@ const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
       if (response.ok) {
         setPlayers((prev) => prev.filter((player) => player.id !== selectedPlayer.id));
         alert('Player deleted successfully!');
-        setSelectedPlayer(null); // Reset the selected player after deletion
+        setSelectedPlayer(null); // Reset selected player after deletion
       } else {
         console.error('Error:', response);
         alert('Failed to delete player.');
@@ -203,7 +203,7 @@ const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
       </div>
 
       <button type="submit">{selectedPlayer ? 'Update Player' : 'Add Player'}</button>
-      
+
       {selectedPlayer && (
         <button type="button" onClick={handleDelete} style={{ backgroundColor: 'red', color: 'white' }}>
           Delete Player
