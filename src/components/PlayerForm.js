@@ -1,205 +1,84 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
-const PlayerForm = (props) => {
-  const [inputs, setInputs] = useState({
-    name: '',
-    team: '',
-    position: '',
-    pointsPerGame: '',
-    assistsPerGame: '',
-    reboundsPerGame: '',
-    image: null,
-  });
-  const [result, setResult] = useState('');
-  const [action, setAction] = useState('add'); // Default action is "add"
-  
+const PlayerForm = () => {
+  const { id } = useParams(); // Get player ID from the route
   const navigate = useNavigate();
-  const { id } = useParams(); // Extract player ID for edit/delete
+  const [player, setPlayer] = useState({ name: '', position: '', team: '' });
+  const [statusMessage, setStatusMessage] = useState('');
+  const [formType, setFormType] = useState('add'); // Tracks form type (add, edit, delete)
 
-  // Handle form input changes
-  const handleChange = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    setInputs((values) => ({ ...values, [name]: value }));
-  };
-
-  // Handle image file input
-  const handleImageChange = (event) => {
-    const name = event.target.name;
-    const value = event.target.files[0];
-    setInputs((values) => ({ ...values, [name]: value }));
-  };
-
-  // Fetch player data for editing
   useEffect(() => {
     if (id) {
-      setAction('edit'); // Change action to "edit" if an ID is present
-      fetch(`https://basketball-junkie-backend.onrender.com/api/players/${id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setInputs({
-            name: data.name,
-            team: data.team,
-            position: data.position,
-            pointsPerGame: data.pointsPerGame,
-            assistsPerGame: data.assistsPerGame,
-            reboundsPerGame: data.reboundsPerGame,
-            image: null,
-          });
-        })
-        .catch((error) => {
-          setResult('Error loading player data');
-          console.error(error);
-        });
+      setFormType('edit'); // Set form type to 'edit' if an ID is present
+      // Fetch player data for editing (replace with actual API call)
+      fetch(`/api/players/${id}`)
+        .then((response) => response.json())
+        .then((data) => setPlayer(data))
+        .catch((error) => setStatusMessage('Failed to load player data'));
     }
   }, [id]);
 
-  // Handle form submission (Add, Edit, or Delete)
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setResult('Sending...');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const method = formType === 'edit' ? 'PUT' : 'POST';
+    const url = formType === 'edit' ? `/api/players/${id}` : '/api/players';
 
-    const formData = new FormData();
-    Object.keys(inputs).forEach((key) => {
-      formData.append(key, inputs[key]);
-    });
+    fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(player),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setStatusMessage(`Player ${formType === 'edit' ? 'updated' : 'added'} successfully.`);
+        navigate('/players');
+      })
+      .catch((error) => setStatusMessage('Error saving player.'));
+  };
 
-    let response;
-    if (action === 'add') {
-      // Add player (POST request)
-      response = await fetch('https://basketball-junkie-backend.onrender.com/api/players', {
-        method: 'POST',
-        body: formData,
-      });
-    } else if (action === 'edit') {
-      // Edit player (PUT request)
-      response = await fetch(
-        `https://basketball-junkie-backend.onrender.com/api/players/${id}`,
-        {
-          method: 'PUT',
-          body: formData,
-        }
-      );
-    } else if (action === 'delete') {
-      // Delete player (DELETE request)
-      response = await fetch(
-        `https://basketball-junkie-backend.onrender.com/api/players/${id}`,
-        {
-          method: 'DELETE',
-        }
-      );
-    }
-
-    if (response.status === 200) {
-      if (action === 'add') {
-        setResult('Player successfully added!');
-      } else if (action === 'edit') {
-        setResult('Player successfully updated!');
-      } else if (action === 'delete') {
-        setResult('Player successfully deleted!');
-      }
-
-      navigate('/players'); // Redirect to players list page
-    } else {
-      setResult('Error processing the request');
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this player?')) {
+      fetch(`/api/players/${id}`, { method: 'DELETE' })
+        .then(() => {
+          setStatusMessage('Player deleted successfully.');
+          navigate('/players');
+        })
+        .catch(() => setStatusMessage('Error deleting player.'));
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPlayer((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
-    <div id="player-form">
-      <h1>{action === 'add' ? 'Add Player' : action === 'edit' ? 'Edit Player' : 'Delete Player'}</h1>
+    <div>
+      <h1>{formType === 'edit' ? 'Edit Player' : 'Add Player'}</h1>
       <form onSubmit={handleSubmit}>
-        <p>
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            value={inputs.name}
-            onChange={handleChange}
-          />
-        </p>
-        <p>
-          <label htmlFor="team">Team:</label>
-          <input
-            type="text"
-            id="team"
-            name="team"
-            required
-            value={inputs.team}
-            onChange={handleChange}
-          />
-        </p>
-        <p>
-          <label htmlFor="position">Position:</label>
-          <input
-            type="text"
-            id="position"
-            name="position"
-            required
-            value={inputs.position}
-            onChange={handleChange}
-          />
-        </p>
-        <p>
-          <label htmlFor="pointsPerGame">Points per Game:</label>
-          <input
-            type="number"
-            id="pointsPerGame"
-            name="pointsPerGame"
-            required
-            value={inputs.pointsPerGame}
-            onChange={handleChange}
-          />
-        </p>
-        <p>
-          <label htmlFor="assistsPerGame">Assists per Game:</label>
-          <input
-            type="number"
-            id="assistsPerGame"
-            name="assistsPerGame"
-            required
-            value={inputs.assistsPerGame}
-            onChange={handleChange}
-          />
-        </p>
-        <p>
-          <label htmlFor="reboundsPerGame">Rebounds per Game:</label>
-          <input
-            type="number"
-            id="reboundsPerGame"
-            name="reboundsPerGame"
-            required
-            value={inputs.reboundsPerGame}
-            onChange={handleChange}
-          />
-        </p>
-        <p>
-          <label htmlFor="image">Upload Image:</label>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-        </p>
-        {action !== 'delete' && (
-          <p>
-            <button type="submit">
-              {action === 'add' ? 'Add Player' : 'Update Player'}
-            </button>
-          </p>
-        )}
-        {action === 'delete' && (
-          <p>
-            <button type="submit">Delete Player</button>
-          </p>
-        )}
+        <div>
+          <label>Name:</label>
+          <input type="text" name="name" value={player.name} onChange={handleChange} required />
+        </div>
+        <div>
+          <label>Position:</label>
+          <input type="text" name="position" value={player.position} onChange={handleChange} required />
+        </div>
+        <div>
+          <label>Team:</label>
+          <input type="text" name="team" value={player.team} onChange={handleChange} required />
+        </div>
+        <button type="submit">{formType === 'edit' ? 'Update Player' : 'Add Player'}</button>
       </form>
-      <p>{result}</p>
+
+      {formType === 'edit' && (
+        <button onClick={handleDelete} style={{ backgroundColor: 'red', color: 'white' }}>
+          Delete Player
+        </button>
+      )}
+
+      {statusMessage && <p>{statusMessage}</p>}
     </div>
   );
 };
