@@ -7,8 +7,8 @@ import Teams from './pages/Teams';
 import Analysis from './pages/Analysis'; 
 import Contact from './pages/Contact'; 
 import ContactForm from './components/ContactForm'; 
-import ParentComponent from './components/ParentComponent'; 
-import PlayerForm from './components/PlayerForm'; // Import PlayerForm (handles add, edit, delete functionality)
+import ParentComponent from './components/ParentComponent';  // Import ParentComponent
+import PlayerForm from './components/PlayerForm';  // Import PlayerForm
 
 const App = () => {
   const [message, setMessage] = useState('');
@@ -26,12 +26,11 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/contact-form" element={<ContactForm />} />
 
-          {/* Routes for the PlayerForm (handles add, edit, and delete functionality) */}
-          <Route path="/add-player" element={<PlayerForm />} /> {/* Route to AddPlayer */}
-          <Route path="/edit-player/:id" element={<PlayerForm />} /> {/* Route to EditPlayer with dynamic player ID */}
-          <Route path="/delete-player/:id" element={<PlayerForm />} /> {/* Route to DeletePlayer with dynamic player ID */}
-
-          <Route path="/player-form" element={<ParentComponent />} /> {/* Use ParentComponent for the player form */}
+          {/* Routes for ParentComponent */}
+          <Route path="/parent-component" element={<ParentComponent />} /> {/* Route to ParentComponent */}
+          
+          {/* Routes for PlayerForm */}
+          <Route path="/player-form" element={<PlayerForm />} /> {/* This is for adding or editing player */}
         </Routes>
       </div>
       <div>

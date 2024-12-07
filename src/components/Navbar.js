@@ -22,10 +22,12 @@ function Navbar() {
         <li><Link to="/analysis">Analysis</Link></li>
         <li><Link to="/contact">Contact</Link></li>
         <li><Link to="/contact-form">Contact Form</Link></li>
-        <li><Link to="/add-player">Add Player</Link></li> {/* Link to add player */}
-        {/* Updated links for Edit and Delete with placeholders for dynamic IDs */}
-        <li><Link to="/edit-player/1">Edit Player</Link></li> {/* Example static link to edit player with ID 1 */}
-        <li><Link to="/delete-player/1">Delete Player</Link></li> {/* Example static link to delete player with ID 1 */}
+
+        {/* Link to PlayerForm */}
+        <li><Link to="/player-form">Add/Edit Player</Link></li> {/* Link to the PlayerForm page */}
+
+        {/* Link to ParentComponent */}
+        <li><Link to="/parent-component">Parent Component</Link></li> {/* Link to the ParentComponent */}
       </ul>
     </nav>
   );
