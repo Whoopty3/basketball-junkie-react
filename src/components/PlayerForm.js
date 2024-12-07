@@ -1,122 +1,116 @@
 import React, { useState, useEffect } from "react";
 
 const PlayerForm = ({ player, setPlayers, setIsEditing, setMessage }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    team: "",
-    position: "",
-    points_per_game: "",
-    assists_per_game: "",
-    rebounds_per_game: "",
-    field_goal_percentage: "",
-    three_point_percentage: "",
-  });
+  const [name, setName] = useState("");
+  const [team, setTeam] = useState("");
+  const [position, setPosition] = useState("");
+  const [pointsPerGame, setPointsPerGame] = useState("");
+  const [assistsPerGame, setAssistsPerGame] = useState("");
+  const [reboundsPerGame, setReboundsPerGame] = useState("");
+  const [fieldGoalPercentage, setFieldGoalPercentage] = useState("");
+  const [threePointPercentage, setThreePointPercentage] = useState("");
 
-  const [errorMessage, setErrorMessage] = useState("");
-
-  // Pre-fill form when editing
   useEffect(() => {
     if (player) {
-      setFormData({
-        name: player.name || "",
-        team: player.team || "",
-        position: player.position || "",
-        points_per_game: player.points_per_game || "",
-        assists_per_game: player.assists_per_game || "",
-        rebounds_per_game: player.rebounds_per_game || "",
-        field_goal_percentage: player.field_goal_percentage || "",
-        three_point_percentage: player.three_point_percentage || "",
-      });
+      setName(player.name || "");
+      setTeam(player.team || "");
+      setPosition(player.position || "");
+      setPointsPerGame(player.points_per_game || "");
+      setAssistsPerGame(player.assists_per_game || "");
+      setReboundsPerGame(player.rebounds_per_game || "");
+      setFieldGoalPercentage(player.field_goal_percentage || "");
+      setThreePointPercentage(player.three_point_percentage || "");
     }
   }, [player]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate all fields
-    for (let key in formData) {
-      if (!formData[key]) {
-        setErrorMessage("All fields are required");
-        return;
-      }
-    }
+    const playerData = {
+      name,
+      team,
+      position,
+      points_per_game: Number(pointsPerGame),
+      assists_per_game: Number(assistsPerGame),
+      rebounds_per_game: Number(reboundsPerGame),
+      field_goal_percentage: Number(fieldGoalPercentage),
+      three_point_percentage: Number(threePointPercentage),
+    };
 
     try {
       let response;
       if (player) {
-        // PUT request for editing
-        response = await fetch(
-          `https://basketball-junkie-backend.onrender.com/api/players/${player._id}`,
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
-          }
-        );
+        response = await fetch(`https://basketball-junkie-backend.onrender.com/api/players/${player._id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(playerData),
+        });
       } else {
-        // POST request for adding
-        response = await fetch(
-          "https://basketball-junkie-backend.onrender.com/api/players",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
-          }
-        );
+        response = await fetch("https://basketball-junkie-backend.onrender.com/api/players", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(playerData),
+        });
       }
 
-      if (!response.ok) {
-        setErrorMessage("Failed to submit player data");
-        return;
-      }
-
-      const data = await response.json();
-      if (player) {
-        setPlayers((prev) =>
-          prev.map((p) => (p._id === data._id ? data : p))
-        );
-        setMessage("Player updated successfully");
+      if (response.ok) {
+        const updatedPlayer = await response.json();
+        if (player) {
+          setPlayers((prev) =>
+            prev.map((p) => (p._id === updatedPlayer._id ? updatedPlayer : p))
+          );
+          setMessage("Player updated successfully.");
+        } else {
+          setPlayers((prev) => [...prev, updatedPlayer]);
+          setMessage("Player added successfully.");
+        }
+        setIsEditing(false);
       } else {
-        setPlayers((prev) => [...prev, data]);
-        setMessage("Player added successfully");
+        setMessage("Failed to save player data.");
       }
-      setIsEditing(false);
     } catch (error) {
-      console.error("Error handling player:", error);
-      setErrorMessage("Error handling player submission");
+      console.error("Error saving player:", error);
+      setMessage("Error saving player data.");
     }
   };
 
   return (
-    <div>
-      <h3>{player ? "Edit Player" : "Add Player"}</h3>
-      <form onSubmit={handleSubmit}>
-        {Object.keys(formData).map((key) => (
-          <div key={key}>
-            <label>{key.replace(/_/g, " ")}:</label>
-            <input
-              type={key.includes("percentage") ? "number" : "text"}
-              name={key}
-              value={formData[key]}
-              onChange={handleChange}
-            />
-          </div>
-        ))}
-        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-        <button type="submit">{player ? "Update Player" : "Add Player"}</button>
-        <button type="button" onClick={() => setIsEditing(false)}>
-          Cancel
-        </button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
+      <input value={team} onChange={(e) => setTeam(e.target.value)} placeholder="Team" />
+      <input value={position} onChange={(e) => setPosition(e.target.value)} placeholder="Position" />
+      <input
+        value={pointsPerGame}
+        onChange={(e) => setPointsPerGame(e.target.value)}
+        placeholder="Points Per Game"
+        type="number"
+      />
+      <input
+        value={assistsPerGame}
+        onChange={(e) => setAssistsPerGame(e.target.value)}
+        placeholder="Assists Per Game"
+        type="number"
+      />
+      <input
+        value={reboundsPerGame}
+        onChange={(e) => setReboundsPerGame(e.target.value)}
+        placeholder="Rebounds Per Game"
+        type="number"
+      />
+      <input
+        value={fieldGoalPercentage}
+        onChange={(e) => setFieldGoalPercentage(e.target.value)}
+        placeholder="Field Goal %"
+        type="number"
+      />
+      <input
+        value={threePointPercentage}
+        onChange={(e) => setThreePointPercentage(e.target.value)}
+        placeholder="3-Point %"
+        type="number"
+      />
+      <button type="submit">{player ? "Update Player" : "Add Player"}</button>
+    </form>
   );
 };
 
