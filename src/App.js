@@ -1,4 +1,3 @@
-// App.js
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar'; 
@@ -9,9 +8,7 @@ import Analysis from './pages/Analysis';
 import Contact from './pages/Contact'; 
 import ContactForm from './components/ContactForm'; 
 import ParentComponent from './components/ParentComponent'; // Import ParentComponent
-import AddPlayer from './components/AddPlayer'; // Import AddPlayer component
-import EditPlayer from './components/EditPlayer'; // Import EditPlayer component
-import DeletePlayer from './components/DeletePlayer'; // Import DeletePlayer component
+import PlayerForm from './components/PlayerForm'; // Import PlayerForm (handles add, edit, delete functionality)
 
 const App = () => {
   const [message, setMessage] = useState('');
@@ -29,10 +26,10 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/contact-form" element={<ContactForm />} />
           
-          {/* Add routes for AddPlayer, EditPlayer, and DeletePlayer */}
-          <Route path="/add-player" element={<AddPlayer />} /> {/* Route to AddPlayer */}
-          <Route path="/edit-player/:id" element={<EditPlayer />} /> {/* Route to EditPlayer with dynamic player ID */}
-          <Route path="/delete-player" element={<DeletePlayer />} /> {/* Route to DeletePlayer */}
+          {/* Route for the PlayerForm (handles add, edit, and delete functionality) */}
+          <Route path="/add-player" element={<PlayerForm />} /> {/* Route to AddPlayer */}
+          <Route path="/edit-player/:id" element={<PlayerForm />} /> {/* Route to EditPlayer with dynamic player ID */}
+          <Route path="/delete-player/:id" element={<PlayerForm />} /> {/* Route to DeletePlayer with dynamic player ID */}
 
           <Route path="/player-form" element={<ParentComponent />} /> {/* Use ParentComponent for the player form */}
         </Routes>
