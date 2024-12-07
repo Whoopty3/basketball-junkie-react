@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-const PlayerForm = ({ playerId, onSubmit, onCancel }) => {
+const PlayerForm = ({ onPlayerAdd }) => {
   // State to hold form data
   const [playerData, setPlayerData] = useState({
     name: '',
@@ -14,17 +14,6 @@ const PlayerForm = ({ playerId, onSubmit, onCancel }) => {
     image: ''
   });
 
-  // Fetch player data if editing an existing player
-  useEffect(() => {
-    if (playerId) {
-      // Fetch player data from the API
-      fetch(`https://basketball-junkie-backend.onrender.com/api/players/${playerId}`)
-        .then(response => response.json())
-        .then(data => setPlayerData(data))
-        .catch(error => console.error('Error fetching player:', error));
-    }
-  }, [playerId]);
-
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,41 +26,35 @@ const PlayerForm = ({ playerId, onSubmit, onCancel }) => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (playerId) {
-      // Update player if editing
-      fetch(`https://basketball-junkie-backend.onrender.com/api/players/${playerId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(playerData)
+    // Add the new player using POST request
+    fetch('https://basketball-junkie-backend.onrender.com/api/players', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(playerData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        onPlayerAdd(data); // Pass the added player to the parent component
+        setPlayerData({ // Reset form
+          name: '',
+          team: '',
+          position: '',
+          pointsPerGame: '',
+          assistsPerGame: '',
+          reboundsPerGame: '',
+          fieldGoalPercentage: '',
+          threePointPercentage: '',
+          image: ''
+        });
       })
-        .then(response => response.json())
-        .then(data => onSubmit(data)) // Pass updated player to parent
-        .catch(error => console.error('Error updating player:', error));
-    } else {
-      // Add new player if not editing
-      fetch('https://basketball-junkie-backend.onrender.com/api/players', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(playerData)
-      })
-        .then(response => response.json())
-        .then(data => onSubmit(data)) // Pass new player to parent
-        .catch(error => console.error('Error adding player:', error));
-    }
-  };
-
-  // Handle form cancel
-  const handleCancel = () => {
-    onCancel();
+      .catch(error => console.error('Error adding player:', error));
   };
 
   return (
     <div>
-      <h2>{playerId ? 'Edit Player' : 'Add New Player'}</h2>
+      <h2>Add New Player</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Name</label>
@@ -164,8 +147,7 @@ const PlayerForm = ({ playerId, onSubmit, onCancel }) => {
           />
         </div>
         <div>
-          <button type="submit">{playerId ? 'Update Player' : 'Add Player'}</button>
-          <button type="button" onClick={handleCancel}>Cancel</button>
+          <button type="submit">Add Player</button>
         </div>
       </form>
     </div>

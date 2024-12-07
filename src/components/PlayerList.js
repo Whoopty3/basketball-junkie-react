@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const PlayerList = ({ onPlayerDelete }) => {
+const PlayerList = () => {
   const [players, setPlayers] = useState([]);
 
   // Fetch the list of players from the API
@@ -12,22 +12,15 @@ const PlayerList = ({ onPlayerDelete }) => {
       .catch(error => console.error('Error fetching players:', error));
   }, []);
 
-  // Handle delete player
-  const handleDelete = (playerId) => {
-    fetch(`https://basketball-junkie-backend.onrender.com/api/players/${playerId}`, {
-      method: 'DELETE'
-    })
-      .then(() => {
-        // Remove deleted player from state
-        setPlayers(prevPlayers => prevPlayers.filter(player => player.id !== playerId));
-        if (onPlayerDelete) onPlayerDelete(playerId); // Call callback after delete
-      })
-      .catch(error => console.error('Error deleting player:', error));
+  // Handle add new player
+  const handlePlayerAdd = (newPlayer) => {
+    setPlayers(prevPlayers => [...prevPlayers, newPlayer]);
   };
 
   return (
     <div>
       <h2>Player List</h2>
+      <PlayerForm onPlayerAdd={handlePlayerAdd} />
       <table>
         <thead>
           <tr>
