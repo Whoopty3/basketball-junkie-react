@@ -22,7 +22,9 @@ function Navbar() {
         <li><Link to="/analysis">Analysis</Link></li>
         <li><Link to="/contact">Contact</Link></li>
         <li><Link to="/contact-form">Contact Form</Link></li>
-        <li><Link to="/player-form">Add Player</Link></li>
+        <li><Link to="/add-player">Add Player</Link></li> {/* Updated link */}
+        <li><Link to="/edit-player/:id">Edit Player</Link></li> {/* Updated link (Dynamic ID) */}
+        <li><Link to="/delete-player">Delete Player</Link></li> {/* Updated link */}
       </ul>
     </nav>
   );
