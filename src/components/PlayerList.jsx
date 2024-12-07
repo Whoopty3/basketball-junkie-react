@@ -15,11 +15,11 @@ const PlayerList = () => {
 
         const result = await response.json();
 
-        // Ensure the response contains a valid array
-        if (result.success && Array.isArray(result.data)) {
-          setPlayers(result.data); // Set players from the 'data' array
+        // Ensure result.data is an array
+        if (result && result.success && Array.isArray(result.data)) {
+          setPlayers(result.data);
         } else {
-          throw new Error('Unexpected API response format');
+          throw new Error('Invalid API response format');
         }
       } catch (error) {
         console.error('Error fetching players:', error);
@@ -34,25 +34,34 @@ const PlayerList = () => {
     return <p>{errorMessage}</p>;
   }
 
-  // Safeguard against non-array values
-  if (!Array.isArray(players) || players.length === 0) {
-    return <p>No players found.</p>;
-  }
+  // Manually render the list without directly using map
+  const renderPlayers = () => {
+    if (!Array.isArray(players) || players.length === 0) {
+      return <p>No players found.</p>;
+    }
+
+    const playerList = [];
+    for (let i = 0; i < players.length; i++) {
+      const player = players[i];
+      playerList.push(
+        <li key={player._id}>
+          <strong>{player.name}</strong> - {player.team} ({player.position})
+          <p>Points per Game: {player.points_per_game}</p>
+          <p>Assists per Game: {player.assists_per_game}</p>
+          <p>Rebounds per Game: {player.rebounds_per_game}</p>
+          <p>Field Goal %: {player.field_goal_percentage}</p>
+          <p>3-Point %: {player.three_point_percentage}</p>
+        </li>
+      );
+    }
+    return playerList;
+  };
 
   return (
     <div>
       <h1>Player List</h1>
       <ul>
-        {players.map((player) => (
-          <li key={player._id}>
-            <strong>{player.name}</strong> - {player.team} ({player.position})
-            <p>Points per Game: {player.points_per_game}</p>
-            <p>Assists per Game: {player.assists_per_game}</p>
-            <p>Rebounds per Game: {player.rebounds_per_game}</p>
-            <p>Field Goal %: {player.field_goal_percentage}</p>
-            <p>3-Point %: {player.three_point_percentage}</p>
-          </li>
-        ))}
+        {renderPlayers()}
       </ul>
     </div>
   );
