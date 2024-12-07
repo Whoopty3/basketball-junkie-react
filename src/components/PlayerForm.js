@@ -1,193 +1,148 @@
-import "../css/Dialog.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import PlayerForm from "./PlayerForm";
 
-const PlayerForm = ({ playerToEdit, onSave, onCancel }) => {
-  const [formData, setFormData] = useState({
-    name: playerToEdit?.name || "",
-    points_per_game: playerToEdit?.points_per_game || "",
-    assists_per_game: playerToEdit?.assists_per_game || "",
-    rebounds_per_game: playerToEdit?.rebounds_per_game || "",
-    field_goal_percentage: playerToEdit?.field_goal_percentage || "",
-    three_point_percentage: playerToEdit?.three_point_percentage || "",
-    team: playerToEdit?.team || "",
-    position: playerToEdit?.position || "",
-    image: null,
-  });
-
+const PlayerList = () => {
+  const [players, setPlayers] = useState([]);
+  const [editingPlayer, setEditingPlayer] = useState(null);
   const [result, setResult] = useState("");
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+  useEffect(() => {
+    fetchPlayers();
+  }, []);
 
-  const handleImageChange = (event) => {
-    const { name } = event.target;
-    const file = event.target.files[0];
-    setFormData((prevData) => ({ ...prevData, [name]: file }));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setResult("Saving...");
-
-    const submitData = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (formData[key]) {
-        submitData.append(key, formData[key]);
-      }
-    });
-
+  const fetchPlayers = async () => {
     try {
-      const url = playerToEdit
-        ? `https://basketball-junkie-backend.onrender.com/api/players/${playerToEdit._id}`
-        : "https://basketball-junkie-backend.onrender.com/api/players";
-      const method = playerToEdit ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        body: submitData,
-      });
-
-      if (response.ok) {
-        setResult("Player successfully saved!");
-        onSave(await response.json());
-      } else {
-        throw new Error("Failed to save player");
-      }
+      const response = await axios.get(
+        "https://basketball-junkie-backend.onrender.com/api/players"
+      );
+      // Ensure that image URLs are correctly formed
+      const playersWithFullImages = response.data.map((player) => ({
+        ...player,
+        image: player.image
+          ? `https://basketball-junkie-backend.onrender.com/images/${player.image}`
+          : null, // If no image, keep it as null
+      }));
+      setPlayers(playersWithFullImages);
     } catch (error) {
-      setResult("Error saving player: " + error.message);
+      console.error("Error fetching players:", error);
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(
+        `https://basketball-junkie-backend.onrender.com/api/players/${id}`
+      );
+      setPlayers(players.filter((player) => player._id !== id));
+      setResult("Player successfully deleted!");
+    } catch (error) {
+      console.error("Error deleting player:", error);
+      setResult("Error deleting player");
+    }
+  };
+
+  const handleEdit = (player) => {
+    setEditingPlayer(player);
+  };
+
+  const handleSave = async (updatedPlayer) => {
+    try {
+      let updatedPlayerData = { ...updatedPlayer };
+
+      // If a new image file is selected, handle the image upload logic
+      if (updatedPlayer.image && updatedPlayer.image instanceof File) {
+        const formData = new FormData();
+        formData.append("image", updatedPlayer.image);
+        // Send the formData to the backend to upload the image and update the player
+        const imageResponse = await axios.post(
+          "https://basketball-junkie-backend.onrender.com/api/uploadImage",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        // Get the uploaded image URL (assuming the backend returns the image filename)
+        updatedPlayerData = { ...updatedPlayer, image: imageResponse.data.imageUrl };
+      }
+
+      // Update player data in the backend
+      const updateResponse = await axios.put(
+        `https://basketball-junkie-backend.onrender.com/api/players/${updatedPlayer._id}`,
+        updatedPlayerData
+      );
+
+      // After the player is successfully updated, re-fetch the player data
+      fetchPlayers();
+
+      // Optionally, reset the editing state or display success message
+      setEditingPlayer(null);
+      setResult("Player successfully updated!");
+    } catch (error) {
+      console.error("Error updating player:", error);
+      setResult("Error updating player");
+    }
+  };
+
+  const handleCancel = () => {
+    setEditingPlayer(null);
+  };
+
+  const handleAddNewPlayer = () => {
+    setEditingPlayer({
+      name: "",
+      points_per_game: "",
+      assists_per_game: "",
+      rebounds_per_game: "",
+      field_goal_percentage: "",
+      three_point_percentage: "",
+      team: "",
+      position: "",
+      image: null,
+    });
+  };
+
   return (
-    <div id="add-dialog" className="w3-modal">
-      <div className="w3-modal-content">
-        <div className="w3-container">
-          <span
-            id="dialog-close"
-            className="w3-button w3-display-topright"
-            onClick={onCancel}
-          >
-            &times;
-          </span>
-          <form id="player-form" onSubmit={handleSubmit}>
+    <div>
+      <h1>Player List</h1>
+      {editingPlayer ? (
+        <PlayerForm
+          playerToEdit={editingPlayer}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      ) : (
+        <button onClick={handleAddNewPlayer}>Add New Player</button>
+      )}
+      <ul>
+        {players.map((player) => (
+          <li key={player._id} className="player-item">
+            <h3>{player.name}</h3>
             <p>
-              <label htmlFor="name">Player Name:</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                value={formData.name}
-                onChange={handleChange}
-              />
+              {player.team} - {player.position}
             </p>
             <p>
-              <label htmlFor="points_per_game">Points Per Game:</label>
-              <input
-                type="number"
-                id="points_per_game"
-                name="points_per_game"
-                required
-                value={formData.points_per_game}
-                onChange={handleChange}
-              />
+              <strong>Stats:</strong> {player.points_per_game} PPG,{" "}
+              {player.assists_per_game} APG, {player.rebounds_per_game} RPG
             </p>
             <p>
-              <label htmlFor="assists_per_game">Assists Per Game:</label>
-              <input
-                type="number"
-                id="assists_per_game"
-                name="assists_per_game"
-                required
-                value={formData.assists_per_game}
-                onChange={handleChange}
-              />
+              <strong>Percentages:</strong> FG%:{" "}
+              {player.field_goal_percentage} | 3P%:{" "}
+              {player.three_point_percentage}
             </p>
-            <p>
-              <label htmlFor="rebounds_per_game">Rebounds Per Game:</label>
-              <input
-                type="number"
-                id="rebounds_per_game"
-                name="rebounds_per_game"
-                required
-                value={formData.rebounds_per_game}
-                onChange={handleChange}
-              />
-            </p>
-            <p>
-              <label htmlFor="field_goal_percentage">Field Goal %:</label>
-              <input
-                type="number"
-                id="field_goal_percentage"
-                name="field_goal_percentage"
-                required
-                value={formData.field_goal_percentage}
-                onChange={handleChange}
-              />
-            </p>
-            <p>
-              <label htmlFor="three_point_percentage">Three-Point %:</label>
-              <input
-                type="number"
-                id="three_point_percentage"
-                name="three_point_percentage"
-                required
-                value={formData.three_point_percentage}
-                onChange={handleChange}
-              />
-            </p>
-            <p>
-              <label htmlFor="team">Team:</label>
-              <input
-                type="text"
-                id="team"
-                name="team"
-                required
-                value={formData.team}
-                onChange={handleChange}
-              />
-            </p>
-            <p>
-              <label htmlFor="position">Position:</label>
-              <input
-                type="text"
-                id="position"
-                name="position"
-                required
-                value={formData.position}
-                onChange={handleChange}
-              />
-            </p>
-            <section className="columns">
-              <p id="img-prev-section">
-                <img
-                  id="img-prev"
-                  alt=""
-                  src={formData.image ? URL.createObjectURL(formData.image) : ""}
-                />
-              </p>
-              <p id="img-upload">
-                <label htmlFor="image">Upload Image:</label>
-                <input
-                  type="file"
-                  id="image"
-                  name="image"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-              </p>
-            </section>
-            <p>
-              <button type="submit">Submit</button>
-            </p>
-            <p>{result}</p>
-          </form>
-        </div>
-      </div>
+            {player.image && (
+              <img src={player.image} alt={`${player.name}`} width="100" />
+            )}
+            <button onClick={() => handleEdit(player)}>Edit</button>
+            <button onClick={() => handleDelete(player._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+      {result && <p>{result}</p>}
     </div>
   );
 };
 
-export default PlayerForm;
+export default PlayerList;
