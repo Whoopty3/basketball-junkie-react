@@ -1,3 +1,4 @@
+// App.js
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar'; 
@@ -7,7 +8,7 @@ import Teams from './pages/Teams';
 import Analysis from './pages/Analysis'; 
 import Contact from './pages/Contact'; 
 import ContactForm from './components/ContactForm'; 
-import PlayerForm from './components/PlayerForm'; 
+import ParentComponent from './components/ParentComponent'; // Import ParentComponent
 
 const App = () => {
   const [message, setMessage] = useState('');
@@ -24,7 +25,7 @@ const App = () => {
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/contact-form" element={<ContactForm />} />
-          <Route path="/player-form" element={<PlayerForm setMessage={setMessage} setErrorMessage={setErrorMessage} />} />
+          <Route path="/player-form" element={<ParentComponent />} /> {/* Use ParentComponent for the player form */}
         </Routes>
       </div>
       <div>
