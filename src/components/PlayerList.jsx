@@ -8,7 +8,7 @@ const PlayerList = () => {
     const fetchPlayers = async () => {
       try {
         const response = await fetch('https://basketball-junkie-backend.onrender.com/api/players');
-        
+
         if (!response.ok) {
           throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
@@ -34,27 +34,25 @@ const PlayerList = () => {
     return <p>{errorMessage}</p>;
   }
 
-  // Creating a list manually using a loop (without using map)
-  const playerList = [];
-  for (let i = 0; i < players.length; i++) {
-    const player = players[i];
-    playerList.push(
-      <li key={player._id}>
-        <strong>{player.name}</strong> - {player.team} ({player.position})
-        <p>Points per Game: {player.points_per_game}</p>
-        <p>Assists per Game: {player.assists_per_game}</p>
-        <p>Rebounds per Game: {player.rebounds_per_game}</p>
-        <p>Field Goal %: {player.field_goal_percentage}</p>
-        <p>3-Point %: {player.three_point_percentage}</p>
-      </li>
-    );
+  // Safeguard against non-array values
+  if (!Array.isArray(players) || players.length === 0) {
+    return <p>No players found.</p>;
   }
 
   return (
     <div>
       <h1>Player List</h1>
       <ul>
-        {playerList.length > 0 ? playerList : <p>No players found.</p>}
+        {players.map((player) => (
+          <li key={player._id}>
+            <strong>{player.name}</strong> - {player.team} ({player.position})
+            <p>Points per Game: {player.points_per_game}</p>
+            <p>Assists per Game: {player.assists_per_game}</p>
+            <p>Rebounds per Game: {player.rebounds_per_game}</p>
+            <p>Field Goal %: {player.field_goal_percentage}</p>
+            <p>3-Point %: {player.three_point_percentage}</p>
+          </li>
+        ))}
       </ul>
     </div>
   );
