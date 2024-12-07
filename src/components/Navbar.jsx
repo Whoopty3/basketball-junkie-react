@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/Navbar.css';  // Make sure the styles are being imported
+import '../styles/Navbar.css';  // Ensure styles are being imported
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,8 +26,8 @@ function Navbar() {
         {/* Link to PlayerForm for adding/editing players */}
         <li><Link to="/player-form">Add/Edit Player</Link></li>
 
-        {/* Link to PlayerList for viewing all players */}
-        <li><Link to="/player-list">Player List</Link></li> 
+        {/* Link to PlayerList for viewing the player list */}
+        <li><Link to="/player-list">Player List</Link></li>
       </ul>
     </nav>
   );

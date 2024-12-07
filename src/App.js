@@ -6,9 +6,9 @@ import Players from './pages/Players';
 import Teams from './pages/Teams'; 
 import Analysis from './pages/Analysis'; 
 import Contact from './pages/Contact'; 
-import ContactForm from './components/ContactForm'; 
-import PlayerList from './components/PlayerList';  // Import PlayerList
-import PlayerForm from './components/PlayerForm';  // Import PlayerForm
+import ContactForm from './components/ContactForm';   
+import PlayerForm from './components/PlayerForm'; 
+import PlayerList from './components/PlayerList'; // Import PlayerList
 
 const App = () => {
   const [message, setMessage] = useState('');
@@ -25,12 +25,12 @@ const App = () => {
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/contact-form" element={<ContactForm />} />
-
-          {/* Routes for PlayerList */}
-          <Route path="/player-list" element={<PlayerList />} /> {/* This is for displaying the list of players */}
           
-          {/* Routes for PlayerForm */}
-          <Route path="/player-form" element={<PlayerForm />} /> {/* This is for adding or editing player */}
+          {/* Route for PlayerForm */}
+          <Route path="/player-form" element={<PlayerForm />} />
+          
+          {/* Route for PlayerList */}
+          <Route path="/player-list" element={<PlayerList />} />
         </Routes>
       </div>
       <div>
