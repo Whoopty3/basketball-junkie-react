@@ -28,6 +28,19 @@ const PlayerForm = ({ playerToEdit, onSave, onCancel }) => {
                 position: playerToEdit.position,
                 image: playerToEdit.image || null,
             });
+        } else {
+            // Reset form data if no player to edit
+            setFormData({
+                name: '',
+                points_per_game: '',
+                assists_per_game: '',
+                rebounds_per_game: '',
+                field_goal_percentage: '',
+                three_point_percentage: '',
+                team: '',
+                position: '',
+                image: null,
+            });
         }
     }, [playerToEdit]);
 
@@ -117,6 +130,8 @@ const PlayerForm = ({ playerToEdit, onSave, onCancel }) => {
                 value={formData.points_per_game}
                 onChange={handleChange}
                 placeholder="Points per game"
+                min="0"
+                step="0.1"
             />
             <input
                 type="number"
@@ -124,6 +139,8 @@ const PlayerForm = ({ playerToEdit, onSave, onCancel }) => {
                 value={formData.assists_per_game}
                 onChange={handleChange}
                 placeholder="Assists per game"
+                min="0"
+                step="0.1"
             />
             <input
                 type="number"
@@ -131,6 +148,8 @@ const PlayerForm = ({ playerToEdit, onSave, onCancel }) => {
                 value={formData.rebounds_per_game}
                 onChange={handleChange}
                 placeholder="Rebounds per game"
+                min="0"
+                step="0.1"
             />
             <input
                 type="number"
@@ -138,6 +157,9 @@ const PlayerForm = ({ playerToEdit, onSave, onCancel }) => {
                 value={formData.field_goal_percentage}
                 onChange={handleChange}
                 placeholder="Field Goal Percentage"
+                min="0"
+                max="100"
+                step="0.1"
             />
             <input
                 type="number"
@@ -145,6 +167,9 @@ const PlayerForm = ({ playerToEdit, onSave, onCancel }) => {
                 value={formData.three_point_percentage}
                 onChange={handleChange}
                 placeholder="3-Point Percentage"
+                min="0"
+                max="100"
+                step="0.1"
             />
             <input
                 type="text"
@@ -165,6 +190,12 @@ const PlayerForm = ({ playerToEdit, onSave, onCancel }) => {
                 name="image"
                 onChange={handleFileChange}
             />
+            {formData.image && (
+                <div>
+                    <p>Image Preview:</p>
+                    <img src={URL.createObjectURL(formData.image)} alt="Player Preview" width="100" />
+                </div>
+            )}
             <button type="submit">{playerToEdit ? 'Update' : 'Add'} Player</button>
             <button type="button" onClick={onCancel}>Cancel</button>
         </form>

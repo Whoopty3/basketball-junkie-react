@@ -41,13 +41,28 @@ const PlayerList = () => {
         setEditingPlayer(null);
     };
 
+    const handleAddNewPlayer = () => {
+        // Setting the editing player to an empty object will allow the form to open for a new player
+        setEditingPlayer({
+            name: '',
+            points_per_game: '',
+            assists_per_game: '',
+            rebounds_per_game: '',
+            field_goal_percentage: '',
+            three_point_percentage: '',
+            team: '',
+            position: '',
+            image: null,
+        });
+    };
+
     return (
         <div>
             <h1>Player List</h1>
             {editingPlayer ? (
                 <PlayerForm playerToEdit={editingPlayer} onSave={handleSave} onCancel={handleCancel} />
             ) : (
-                <button onClick={() => setEditingPlayer({})}>Add New Player</button>
+                <button onClick={handleAddNewPlayer}>Add New Player</button>
             )}
             <ul>
                 {players.map(player => (
