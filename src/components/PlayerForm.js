@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from "react";
 
-const PlayerForm = ({ playerToEdit, onSave, onCancel }) => {
-  const [player, setPlayer] = useState(playerToEdit);
+const PlayerForm = ({ playerToEdit, onSave, onCancel, onDelete }) => {
+  const [player, setPlayer] = useState({
+    name: "",
+    points_per_game: "",
+    assists_per_game: "",
+    rebounds_per_game: "",
+    field_goal_percentage: "",
+    three_point_percentage: "",
+    team: "",
+    position: "",
+    image: null,
+  });
 
   useEffect(() => {
-    setPlayer(playerToEdit);
+    if (playerToEdit) {
+      setPlayer(playerToEdit);
+    }
   }, [playerToEdit]);
 
   const handleChange = (e) => {
@@ -17,103 +29,131 @@ const PlayerForm = ({ playerToEdit, onSave, onCancel }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setPlayer((prevPlayer) => ({
-      ...prevPlayer,
-      image: file ? URL.createObjectURL(file) : null,
-    }));
+    if (file) {
+      setPlayer((prevPlayer) => ({
+        ...prevPlayer,
+        image: file,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(player);
+    onSave(player); // Save the player (add or edit)
+  };
+
+  const handleDelete = () => {
+    if (player._id) {
+      onDelete(player._id); // Delete the player by ID
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Name:</label>
-        <input
-          type="text"
-          name="name"
-          value={player.name || ""}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Points Per Game:</label>
-        <input
-          type="number"
-          name="points_per_game"
-          value={player.points_per_game || ""}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Assists Per Game:</label>
-        <input
-          type="number"
-          name="assists_per_game"
-          value={player.assists_per_game || ""}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Rebounds Per Game:</label>
-        <input
-          type="number"
-          name="rebounds_per_game"
-          value={player.rebounds_per_game || ""}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Field Goal Percentage:</label>
-        <input
-          type="number"
-          name="field_goal_percentage"
-          value={player.field_goal_percentage || ""}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>3-Point Percentage:</label>
-        <input
-          type="number"
-          name="three_point_percentage"
-          value={player.three_point_percentage || ""}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Team:</label>
-        <input
-          type="text"
-          name="team"
-          value={player.team || ""}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Position:</label>
-        <input
-          type="text"
-          name="position"
-          value={player.position || ""}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Image:</label>
-        <input
-          type="file"
-          name="image"
-          onChange={handleImageChange}
-        />
-        {player.image && <img src={player.image} alt="Player" />}
-      </div>
-      <button type="submit">Save</button>
-      <button type="button" onClick={onCancel}>Cancel</button>
-    </form>
+    <div>
+      <h2>{player._id ? "Edit Player" : "Add New Player"}</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Name:
+          <input
+            type="text"
+            name="name"
+            value={player.name}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Points per Game:
+          <input
+            type="number"
+            name="points_per_game"
+            value={player.points_per_game}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Assists per Game:
+          <input
+            type="number"
+            name="assists_per_game"
+            value={player.assists_per_game}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Rebounds per Game:
+          <input
+            type="number"
+            name="rebounds_per_game"
+            value={player.rebounds_per_game}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Field Goal Percentage:
+          <input
+            type="number"
+            name="field_goal_percentage"
+            value={player.field_goal_percentage}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Three-Point Percentage:
+          <input
+            type="number"
+            name="three_point_percentage"
+            value={player.three_point_percentage}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Team:
+          <input
+            type="text"
+            name="team"
+            value={player.team}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Position:
+          <input
+            type="text"
+            name="position"
+            value={player.position}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Player Image:
+          <input
+            type="file"
+            name="image"
+            onChange={handleImageChange}
+          />
+          {player.image && <p>Selected Image: {player.image.name}</p>}
+        </label>
+        <div>
+          <button type="submit">{player._id ? "Update Player" : "Add Player"}</button>
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+          {player._id && (
+            <button type="button" onClick={handleDelete}>
+              Delete Player
+            </button>
+          )}
+        </div>
+      </form>
+    </div>
   );
 };
 
