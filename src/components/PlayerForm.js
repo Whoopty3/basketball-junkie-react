@@ -1,137 +1,174 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const PlayerForm = () => {
-  const [playerData, setPlayerData] = useState({
-    name: '',
-    team: '',
-    position: '',
-    points_per_game: '',
-    assists_per_game: '',
-    rebounds_per_game: '',
-    field_goal_percentage: '',
-    three_point_percentage: ''
-  });
-
-  const [image, setImage] = useState(null);
-
-  // Handle input changes for player data
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setPlayerData({
-      ...playerData,
-      [name]: value,
+const PlayerForm = ({ playerToEdit, onSave, onCancel }) => {
+    const [formData, setFormData] = useState({
+        name: '',
+        points_per_game: '',
+        assists_per_game: '',
+        rebounds_per_game: '',
+        field_goal_percentage: '',
+        three_point_percentage: '',
+        team: '',
+        position: '',
+        image: null,
     });
-  };
+    const [message, setMessage] = useState('');
 
-  // Handle file input (image)
-  const handleFileChange = (e) => {
-    setImage(e.target.files[0]);
-  };
+    useEffect(() => {
+        if (playerToEdit) {
+            setFormData({
+                name: playerToEdit.name,
+                points_per_game: playerToEdit.points_per_game,
+                assists_per_game: playerToEdit.assists_per_game,
+                rebounds_per_game: playerToEdit.rebounds_per_game,
+                field_goal_percentage: playerToEdit.field_goal_percentage,
+                three_point_percentage: playerToEdit.three_point_percentage,
+                team: playerToEdit.team,
+                position: playerToEdit.position,
+                image: playerToEdit.image || null,
+            });
+        }
+    }, [playerToEdit]);
 
-  // Submit the form to the backend
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
 
-    const formData = new FormData();
-    // Append player data to FormData
-    for (let key in playerData) {
-      formData.append(key, playerData[key]);
-    }
-    // Append the image if it exists
-    if (image) {
-      formData.append('image', image);
-    }
+    const handleFileChange = (event) => {
+        setFormData({
+            ...formData,
+            image: event.target.files[0],
+        });
+    };
 
-    try {
-      // Make the POST request to your backend API
-      const response = await axios.post('https://basketball-junkie-backend.onrender.com/api/players', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      alert('Player added successfully!');
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error adding player:', error);
-      alert('Error adding player');
-    }
-  };
+    const validateForm = () => {
+        if (
+            !formData.name ||
+            !formData.points_per_game ||
+            !formData.assists_per_game ||
+            !formData.rebounds_per_game ||
+            !formData.field_goal_percentage ||
+            !formData.three_point_percentage ||
+            !formData.team ||
+            !formData.position
+        ) {
+            setMessage('All fields are required');
+            return false;
+        }
+        setMessage('');
+        return true;
+    };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="name"
-        placeholder="Player Name"
-        value={playerData.name}
-        onChange={handleInputChange}
-        required
-      />
-      <input
-        type="text"
-        name="team"
-        placeholder="Team"
-        value={playerData.team}
-        onChange={handleInputChange}
-        required
-      />
-      <input
-        type="text"
-        name="position"
-        placeholder="Position"
-        value={playerData.position}
-        onChange={handleInputChange}
-        required
-      />
-      <input
-        type="number"
-        name="points_per_game"
-        placeholder="Points per game"
-        value={playerData.points_per_game}
-        onChange={handleInputChange}
-        required
-      />
-      <input
-        type="number"
-        name="assists_per_game"
-        placeholder="Assists per game"
-        value={playerData.assists_per_game}
-        onChange={handleInputChange}
-        required
-      />
-      <input
-        type="number"
-        name="rebounds_per_game"
-        placeholder="Rebounds per game"
-        value={playerData.rebounds_per_game}
-        onChange={handleInputChange}
-        required
-      />
-      <input
-        type="number"
-        name="field_goal_percentage"
-        placeholder="Field Goal Percentage"
-        value={playerData.field_goal_percentage}
-        onChange={handleInputChange}
-        required
-      />
-      <input
-        type="number"
-        name="three_point_percentage"
-        placeholder="Three Point Percentage"
-        value={playerData.three_point_percentage}
-        onChange={handleInputChange}
-        required
-      />
-      <input
-        type="file"
-        name="image"
-        onChange={handleFileChange}
-      />
-      <button type="submit">Add Player</button>
-    </form>
-  );
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!validateForm()) return;
+
+        const formDataToSend = new FormData();
+        formDataToSend.append('name', formData.name);
+        formDataToSend.append('points_per_game', formData.points_per_game);
+        formDataToSend.append('assists_per_game', formData.assists_per_game);
+        formDataToSend.append('rebounds_per_game', formData.rebounds_per_game);
+        formDataToSend.append('field_goal_percentage', formData.field_goal_percentage);
+        formDataToSend.append('three_point_percentage', formData.three_point_percentage);
+        formDataToSend.append('team', formData.team);
+        formDataToSend.append('position', formData.position);
+        if (formData.image) {
+            formDataToSend.append('image', formData.image);
+        }
+
+        try {
+            let response;
+            if (playerToEdit) {
+                // If editing, make PUT request
+                response = await axios.put(`http://localhost:3001/api/players/${playerToEdit._id}`, formDataToSend, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+            } else {
+                // If adding new, make POST request
+                response = await axios.post('http://localhost:3001/api/players', formDataToSend, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+            }
+            onSave(response.data);
+        } catch (error) {
+            setMessage('Error saving player data');
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <h2>{playerToEdit ? 'Edit Player' : 'Add Player'}</h2>
+            {message && <p>{message}</p>}
+            <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Player Name"
+            />
+            <input
+                type="number"
+                name="points_per_game"
+                value={formData.points_per_game}
+                onChange={handleChange}
+                placeholder="Points per game"
+            />
+            <input
+                type="number"
+                name="assists_per_game"
+                value={formData.assists_per_game}
+                onChange={handleChange}
+                placeholder="Assists per game"
+            />
+            <input
+                type="number"
+                name="rebounds_per_game"
+                value={formData.rebounds_per_game}
+                onChange={handleChange}
+                placeholder="Rebounds per game"
+            />
+            <input
+                type="number"
+                name="field_goal_percentage"
+                value={formData.field_goal_percentage}
+                onChange={handleChange}
+                placeholder="Field Goal Percentage"
+            />
+            <input
+                type="number"
+                name="three_point_percentage"
+                value={formData.three_point_percentage}
+                onChange={handleChange}
+                placeholder="3-Point Percentage"
+            />
+            <input
+                type="text"
+                name="team"
+                value={formData.team}
+                onChange={handleChange}
+                placeholder="Team"
+            />
+            <input
+                type="text"
+                name="position"
+                value={formData.position}
+                onChange={handleChange}
+                placeholder="Position"
+            />
+            <input
+                type="file"
+                name="image"
+                onChange={handleFileChange}
+            />
+            <button type="submit">{playerToEdit ? 'Update' : 'Add'} Player</button>
+            <button type="button" onClick={onCancel}>Cancel</button>
+        </form>
+    );
 };
 
 export default PlayerForm;
