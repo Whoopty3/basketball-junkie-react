@@ -1,119 +1,5 @@
 import React, { useState, useEffect } from "react";
-
-// PlayerForm Component
-const PlayerForm = ({ playerToEdit, onSave, onCancel, onDelete }) => {
-  const [player, setPlayer] = useState({
-    id: "",
-    name: "",
-    team: "",
-    points: "",
-    assists: "",
-    rebounds: "",
-    fieldGoalPercentage: "",
-    threePointPercentage: "",
-  });
-
-  useEffect(() => {
-    if (playerToEdit) {
-      setPlayer({ ...playerToEdit });
-    }
-  }, [playerToEdit]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setPlayer((prevPlayer) => ({
-      ...prevPlayer,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave(player);
-  };
-
-  const handleDelete = () => {
-    onDelete(player.id);
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <h2>{player.id ? "Edit Player" : "Add New Player"}</h2>
-      <label>Name:
-        <input
-          type="text"
-          name="name"
-          value={player.name}
-          onChange={handleInputChange}
-          required
-        />
-      </label>
-      <label>Team:
-        <input
-          type="text"
-          name="team"
-          value={player.team}
-          onChange={handleInputChange}
-          required
-        />
-      </label>
-      <label>Points:
-        <input
-          type="number"
-          name="points"
-          value={player.points}
-          onChange={handleInputChange}
-          required
-        />
-      </label>
-      <label>Assists:
-        <input
-          type="number"
-          name="assists"
-          value={player.assists}
-          onChange={handleInputChange}
-          required
-        />
-      </label>
-      <label>Rebounds:
-        <input
-          type="number"
-          name="rebounds"
-          value={player.rebounds}
-          onChange={handleInputChange}
-          required
-        />
-      </label>
-      <label>Field Goal Percentage:
-        <input
-          type="number"
-          name="fieldGoalPercentage"
-          value={player.fieldGoalPercentage}
-          onChange={handleInputChange}
-          required
-        />
-      </label>
-      <label>Three-Point Percentage:
-        <input
-          type="number"
-          name="threePointPercentage"
-          value={player.threePointPercentage}
-          onChange={handleInputChange}
-          required
-        />
-      </label>
-      <div>
-        <button type="submit">{player.id ? "Save Changes" : "Add Player"}</button>
-        {player.id && (
-          <button type="button" onClick={handleDelete}>
-            Delete Player
-          </button>
-        )}
-        <button type="button" onClick={onCancel}>Cancel</button>
-      </div>
-    </form>
-  );
-};
+import PlayerForm from "./PlayerForm";
 
 // PlayerList Component
 const PlayerList = () => {
@@ -121,11 +7,13 @@ const PlayerList = () => {
   const [editingPlayer, setEditingPlayer] = useState(null);
   const [result, setResult] = useState("");
 
-  // Fetch players from API
+  // Fetch players from the external API
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
-        const response = await fetch("/api/players");
+        const response = await fetch(
+          "https://basketball-junkie-backend.onrender.com/api/players"
+        );
         const data = await response.json();
         setPlayers(data);
       } catch (error) {
@@ -136,7 +24,7 @@ const PlayerList = () => {
   }, []);
 
   const handleAddNewPlayer = () => {
-    setEditingPlayer({});
+    setEditingPlayer({});  // Initialize as an empty object for new player
   };
 
   const handleEdit = (player) => {
@@ -144,15 +32,26 @@ const PlayerList = () => {
   };
 
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this player?");
+    if (!confirmDelete) return;
+
     try {
-      await fetch(`/api/players/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `https://basketball-junkie-backend.onrender.com/api/players/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to delete player");
+      }
       setPlayers(players.filter((player) => player.id !== id));
       setResult("Player deleted successfully");
+      setTimeout(() => setResult(""), 3000); // Clear message after 3 seconds
     } catch (error) {
       console.error("Error deleting player:", error);
       setResult("Error deleting player");
+      setTimeout(() => setResult(""), 3000); // Clear message after 3 seconds
     }
   };
 
@@ -160,30 +59,51 @@ const PlayerList = () => {
     try {
       let response;
       if (player.id) {
-        response = await fetch(`/api/players/${player.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(player),
-        });
+        response = await fetch(
+          `https://basketball-junkie-backend.onrender.com/api/players/${player.id}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(player),
+          }
+        );
       } else {
-        response = await fetch("/api/players", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(player),
-        });
+        response = await fetch(
+          "https://basketball-junkie-backend.onrender.com/api/players",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(player),
+          }
+        );
       }
 
-      const savedPlayer = await response.json();
-      if (player.id) {
-        setPlayers(players.map((p) => (p.id === savedPlayer.id ? savedPlayer : p)));
+      const text = await response.text(); // Get the response body as text
+
+      if (response.ok) {
+        try {
+          const savedPlayer = JSON.parse(text); // Try parsing JSON
+          if (player.id) {
+            setPlayers(players.map((p) => (p.id === savedPlayer.id ? savedPlayer : p)));
+          } else {
+            setPlayers([...players, savedPlayer]);
+          }
+          setResult("Player saved successfully");
+          setTimeout(() => setResult(""), 3000); // Clear message after 3 seconds
+          setEditingPlayer(null);
+        } catch (e) {
+          console.error("Failed to parse JSON:", e, text);
+          setResult("Error saving player");
+          setTimeout(() => setResult(""), 3000); // Clear message after 3 seconds
+        }
       } else {
-        setPlayers([...players, savedPlayer]);
+        setResult("Error saving player: " + text);
+        setTimeout(() => setResult(""), 3000); // Clear message after 3 seconds
       }
-      setResult("Player saved successfully");
-      setEditingPlayer(null);
     } catch (error) {
       console.error("Error saving player:", error);
       setResult("Error saving player");
+      setTimeout(() => setResult(""), 3000); // Clear message after 3 seconds
     }
   };
 
@@ -198,7 +118,7 @@ const PlayerList = () => {
       {result && <p>{result}</p>}
       <ul>
         {players.map((player) => (
-          <li key={player.id}>
+          <li key={player.id}> {/* Ensure 'id' is unique for each player */}
             <div>
               <p>{player.name}</p>
               <button onClick={() => handleEdit(player)}>Edit</button>
@@ -210,7 +130,7 @@ const PlayerList = () => {
       {editingPlayer !== null && (
         <PlayerForm
           playerToEdit={editingPlayer}
-          onSave={handleSave}
+          onSave={handleSave}  // Ensure onSave is passed as a function
           onCancel={handleCancel}
           onDelete={handleDelete}
         />
