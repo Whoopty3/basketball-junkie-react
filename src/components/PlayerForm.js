@@ -71,18 +71,27 @@ const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
 
       if (response.ok) {
         const updatedPlayer = await response.json();
-        // Add or update the player in the state
-        if (selectedPlayer) {
-          setPlayers((prev) =>
-            prev.map((player) =>
-              player.id === selectedPlayer.id ? { ...player, ...updatedPlayer } : player
-            )
-          );
-          alert('Player updated successfully!');
+
+        // Check if setPlayers is a valid function and that prev is an array
+        if (typeof setPlayers === 'function') {
+          setPlayers((prev) => {
+            if (Array.isArray(prev)) {
+              return selectedPlayer
+                ? prev.map((player) =>
+                    player.id === selectedPlayer.id ? { ...player, ...updatedPlayer } : player
+                  )
+                : [...prev, updatedPlayer];
+            } else {
+              console.error("setPlayers: 'prev' is not an array");
+              return prev; // Ensure state is maintained in case of error
+            }
+          });
+
+          alert(selectedPlayer ? 'Player updated successfully!' : 'Player added successfully!');
         } else {
-          setPlayers((prev) => [...prev, updatedPlayer]);
-          alert('Player added successfully!');
+          console.error("setPlayers is not a function");
         }
+
         setSelectedPlayer(null); // Reset the selected player after adding/updating
       } else {
         console.error('Error:', response);
@@ -122,9 +131,10 @@ const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
       <h2>{selectedPlayer ? 'Edit Player' : 'Add Player'}</h2>
 
       <div>
-        <label>Name:</label>
+        <label htmlFor="name">Name:</label>
         <input
           type="text"
+          id="name"
           name="name"
           value={formData.name}
           onChange={handleChange}
@@ -133,9 +143,10 @@ const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
       </div>
 
       <div>
-        <label>Points:</label>
+        <label htmlFor="points">Points:</label>
         <input
           type="number"
+          id="points"
           name="points"
           value={formData.points}
           onChange={handleChange}
@@ -144,9 +155,10 @@ const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
       </div>
 
       <div>
-        <label>Assists:</label>
+        <label htmlFor="assists">Assists:</label>
         <input
           type="number"
+          id="assists"
           name="assists"
           value={formData.assists}
           onChange={handleChange}
@@ -155,9 +167,10 @@ const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
       </div>
 
       <div>
-        <label>Rebounds:</label>
+        <label htmlFor="rebounds">Rebounds:</label>
         <input
           type="number"
+          id="rebounds"
           name="rebounds"
           value={formData.rebounds}
           onChange={handleChange}
@@ -166,9 +179,10 @@ const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
       </div>
 
       <div>
-        <label>Field Goal Percentage:</label>
+        <label htmlFor="fieldGoalPercentage">Field Goal Percentage:</label>
         <input
           type="number"
+          id="fieldGoalPercentage"
           name="fieldGoalPercentage"
           value={formData.fieldGoalPercentage}
           onChange={handleChange}
@@ -177,9 +191,10 @@ const PlayerForm = ({ selectedPlayer, setPlayers, setSelectedPlayer }) => {
       </div>
 
       <div>
-        <label>Three Point Percentage:</label>
+        <label htmlFor="threePointPercentage">Three Point Percentage:</label>
         <input
           type="number"
+          id="threePointPercentage"
           name="threePointPercentage"
           value={formData.threePointPercentage}
           onChange={handleChange}
